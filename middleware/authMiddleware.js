@@ -4,9 +4,9 @@ const authMiddleware = (req, res, next) => {
     // Get the token from the Authorization header
     const token = req.header('Authorization')?.split(' ')[1];
 
-    // If token is missing, return a 401 Unauthorized response
+    // If token is missing, redirect to the sign-in page
     if (!token) {
-        return res.status(401).json({ message: 'Access denied. No token provided.' });
+        return res.redirect('/signin'); // Redirect to the sign-in page
     }
 
     try {
@@ -16,8 +16,8 @@ const authMiddleware = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
-        // If the token is invalid or expired, return a 401 Unauthorized response
-        res.status(401).json({ message: 'Invalid or expired token' });
+        // If the token is invalid or expired, redirect to the sign-in page
+        res.redirect('/signin'); // Redirect to the sign-in page
     }
 };
 

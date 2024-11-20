@@ -6,10 +6,10 @@ const connectToDatabase = require('./config/db');
 const authRoutes = require('./routes/auth');
 const protectedRoute = require('./routes/protected');
 const bodyParser = require('body-parser');
-
+const authMiddleware = require('./middleware/authMiddleware'); 
 
 const app = express();
-const port = process.env.PORT || 3000; // Use the port defined in .env or default to 5000
+const port = process.env.PORT || 3000; 
 
 
  
@@ -52,7 +52,8 @@ app.get('/blogsfa', (req, res) => {
   res.render('blogsfa', { title:` بلاگ ها `,  layout: "_fa" });
 });
 app.get('/signin', (req, res) => {
-  res.render('signin', { title: `signin` ,  layout: false });
+    const error = req.query.error;
+    res.render('signin', { title: 'Sign In', layout: false, error });
 });
 app.get('/Contactus', (req, res) => {
   res.render('Contactus', { title: `Contact Us` });
@@ -60,31 +61,31 @@ app.get('/Contactus', (req, res) => {
 app.get('/signup', (req, res) => {
   res.render('signup', {title: `signup` , layout: false });
 });
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', authMiddleware, (req, res) => {
   res.render('dashboard', { title:` dashboard `, layout: "__dashboard"});
 });
-app.get('/profile', (req, res) => {
+app.get('/profile', authMiddleware, (req, res) => {
   res.render('profile', { title:` profile `, layout: "__dashboard"});
 });
-app.get('/tables', (req, res) => {
+app.get('/tables', authMiddleware, (req, res) => {
   res.render('dashTable', { title:` Tables `, layout: "__dashboard"});
 });
-app.get('/virtual-reality', (req, res) => {
+app.get('/virtual-reality', authMiddleware, (req, res) => {
   res.render('vreality', { title:` Virtual Reality `, layout: false});
 });
-app.get('/billing', (req, res) => {
+app.get('/billing', authMiddleware, (req, res) => {
   res.render('billing', { title:` billing `, layout: "__dashboard"});
 });
-app.get('/rtl', (req, res) => {
+app.get('/rtl', authMiddleware, (req, res) => {
   res.render('rtl', { title:`داشبرد ستاره`,  layout: "__rtl" });
 });
-app.get('/billingfa', (req, res) => {
+app.get('/billingfa', authMiddleware, (req, res) => {
   res.render('billingfa', { title:`صورتحساب`,  layout: "__rtl" });
 });
-app.get('/profilefa', (req, res) => {
+app.get('/profilefa', authMiddleware, (req, res) => {
   res.render('profilefa', { title:`اطلاعات شخصی`,  layout: "__rtl" });
 });
-app.get('/tablesfa', (req, res) => {
+app.get('/tablesfa', authMiddleware, (req, res) => {
   res.render('dashTablefa', { title:`جدول ها`,  layout: "__rtl" });
 });
 app.get('/load-form', (req, res) => {
