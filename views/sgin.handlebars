@@ -11,8 +11,11 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
   <!-- MDB -->
+
   <link rel="stylesheet" href="../public/css/mdb.min.css" />
   <link rel="stylesheet" href="/assets/css/cs.css">
+
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.min.css" rel="stylesheet" />
   <!-- Bootstrap CSS -->
   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -28,47 +31,62 @@
   <div class="container py-5">
     <div id="night-sky" style="--number-of-stars: 70"></div>
 
-    <div class="row d-flex align-items-center justify-content-center">
+    <div class="row d-flex align-items-center">
+
+      <div class="col-md-6">
+
+        <p class="fs-3 fw-bold text-primary">Describe your website to us</p>
+
+        <p class="fs-3 fw-bold text-primary">Get your <span class="text-danger">Free Customize preview</span> today</p>
+
+        <hr class="my-3">
+
+        <p class="text-secondary small">
+          <strong>Maximize your business potential with cutting-edge technologies</strong><br>
+          Answer the questions and receive your custom preview.
+        </p>
+      </div>
+
+
       <div class="col-md-6">
         <div class=" border  shadow-0 mb-3 glass-card" style="width: 100%;">
           <div class="card-body rounded-4 text-light px-5 pt-4 pb-2">
             <form id="signin-form" class="text-center" novalidate>
               <!-- Section 1: Basic Information -->
               <div id="section-1" class="form-section">
-                <h4 class="text-secondary">Login</h4>
+                <h4 class="text-secondary">Basic Information</h4>
                 <br><br>
                 <div class="row mb-4">
                   <div class="col">
                     <div data-mdb-input-init class="form-outline">
-                      <input name="Email" type="Email" id="Email" class=" text-secondary form-control" required />
-                      <label class="form-label" for="Email">Email Address</label>
+                      <input name="Email" type="email" id="email" class=" text-secondary form-control" required />
+                      <label class="form-label" for="email">Email Address</label>
                     </div>
                   </div>
                 </div>
                 <div class="row mb-4">
                   <div class="col">
                     <div data-mdb-input-init class="form-outline">
-                      <input name="Password" type="Password" id="Password" class=" text-secondary form-control"
-                        required />
-                      <label class="form-label" for="Password">Password</label>
+                      <input name="Passwd" type="password" id="password" class=" text-secondary form-control" required />
+                      <label class="form-label" for="Passwd">Password</label>
                     </div>
                   </div>
                 </div>
-
-                <!-- 2 column grid layout for inline styling -->
-                <div class="row mb-4">
-                  <div class="col d-flex justify-content-center">
-                    <!-- Checkbox -->
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="rememberMe" />
-                      <label class="form-check-label" for="rememberMe"> Remember me </label>
-                    </div>
-                  </div>
-
-                  <div class="text-center bg-transparent">
-                    <button type="submit" class="btn btn-lg btn-primary sc"><span class="fb"></span>Sign in</button>
-                  </div>
+                
+            <!-- 2 column grid layout for inline styling -->
+            <div class="row mb-4">
+              <div class="col d-flex justify-content-center">
+                <!-- Checkbox -->
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="rememberMe" checked />
+                  <label class="form-check-label" for="rememberMe"> Remember me </label>
                 </div>
+              </div>
+
+                <div class="text-center bg-transparent">
+                  <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+              </div>
 
             </form>
 
@@ -88,11 +106,15 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
   </script>
+
   <!-- MDB -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="/assets/js/cs.js"></script>
-  <!--   Core JS Files   -->
+
+<!--   Core JS Files   -->
+  
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
     $(document).ready(function () {
@@ -101,13 +123,13 @@
         block();
         son();
         // Get form values
-        const Email = $('#Email').val().trim();
-        const Password = $('#Password').val();
+        const email = $('#email').val().trim();
+        const password = $('#password').val();
         const rememberMe = $('#rememberMe').is(':checked');
 
         // Client-side input validation
-        if (!Email || !Password) {
-          alert('Please fill in both Email and Password fields.');
+        if (!email || !password) {
+          alert('Please fill in both email and password fields.');
           return;
         }
         // Send AJAX request
@@ -116,8 +138,8 @@
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify({
-            Email: Email,
-            Password: Password,
+            email: email,
+            password: password,
             rememberMe: rememberMe
           }),
           success: function (response) {
@@ -156,15 +178,15 @@
 
 
 
-  <script>
-    function block() { $(".sc").prop('disabled', true); }
-    function bon() { $(".sc").prop('disabled', false); }
-    function son() { $(".fb").addClass("spinner-border spinner-border-sm"); }
-    function soff() { $(".fb").removeClass("spinner-border spinner-border-sm"); }
-  </script>
+<script>
+function block() { $(".sc").prop('disabled', true); }
+function bon() { $(".sc").prop('disabled', false); }
+function son() { $(".fb").addClass("spinner-border spinner-border-sm"); }
+function soff() { $(".fb").removeClass("spinner-border spinner-border-sm"); }
+</script>
 
 
-
+ 
 
 </body>
 

@@ -1,23 +1,19 @@
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
-    // Get the token from the Authorization header
-    const token = req.header('Authorization')?.split(' ')[1];
+    const token = req.cookies.authToken; // Retrieve token from cookie
 
-    // If token is missing, redirect to the sign-in page
     if (!token) {
-        return res.redirect('/signin'); // Redirect to the sign-in page
+        return res.redirect('/signin');
     }
 
     try {
-        // Verify the token and decode it
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        // Attach the decoded user information to the request object
-        req.user = decoded;
-        next();
+        const user = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+        req.user = user; // Attach user info to the request
+        next(); // Proceed to the next middleware/route
     } catch (err) {
-        // If the token is invalid or expired, redirect to the sign-in page
-        res.redirect('/signin'); // Redirect to the sign-in page
+        console.error('Token verification error:', err);
+        res.redirect('/signin');
     }
 };
 

@@ -4,15 +4,20 @@ const { engine } = require('express-handlebars');
 require('dotenv').config();
 const connectToDatabase = require('./config/db');
 const authRoutes = require('./routes/auth');
-const protectedRoute = require('./routes/protected');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const authMiddleware = require('./middleware/authMiddleware'); 
+const cbform = require('./routes/cashbuyer-route');
 
 const app = express();
-const port = process.env.PORT || 3000; 
+const port = process.env.PORT; 
 
+// Middleware to handle cookies
+app.use(cookieParser());
 
- 
+// Middleware to parse JSON and URL-encoded requests
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -24,43 +29,40 @@ app.engine('handlebars', engine({
    layoutsDir: path.join(__dirname , 'views/layouts'),  
 }));
 app.set('view engine', 'handlebars');
-app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'protected_views/pages')]);
-
-// Mount protected routes
-const protectedRoutes = require('./routes/protected');
-app.use('/protected', protectedRoutes);
+app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views/forms'), path.join(__dirname, 'protected_views/pages')]);
 
 
 // Serve static files
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/auth', authRoutes);
-app.use('/api', protectedRoute);
+app.use('/api', cbform);
 
-// Handle routes
+
+// public routes
 app.get('/', (req, res) => {
-  res.render('index', { title: `Nick's Web Project page` });
+  res.render('index', { title: `Nick House Buyer` });
 });
-app.get('/fa', (req, res) => {
-  res.render('fa' , { title: 'پروژه‌های وب نیک',  layout: "_fa" });
-});
+
 // Handle blogs routes (e.g., about page)
 app.get('/Blogs', (req, res) => {
-  res.render('Blogs', { title: Blogs  });
+  res.render('Blogs', { title:' Blogs'  });
 });
-app.get('/blogsfa', (req, res) => {
-  res.render('blogsfa', { title:` بلاگ ها `,  layout: "_fa" });
-});
+
 app.get('/signin', (req, res) => {
     const error = req.query.error;
     res.render('signin', { title: 'Sign In', layout: false, error });
 });
+
 app.get('/Contactus', (req, res) => {
   res.render('Contactus', { title: `Contact Us` });
 });
 app.get('/signup', (req, res) => {
   res.render('signup', {title: `signup` , layout: false });
 });
+
+// dashboard routes
+
 app.get('/dashboard', authMiddleware, (req, res) => {
   res.render('dashboard', { title:` dashboard `, layout: "__dashboard"});
 });
@@ -76,23 +78,15 @@ app.get('/virtual-reality', authMiddleware, (req, res) => {
 app.get('/billing', authMiddleware, (req, res) => {
   res.render('billing', { title:` billing `, layout: "__dashboard"});
 });
-app.get('/rtl', authMiddleware, (req, res) => {
-  res.render('rtl', { title:`داشبرد ستاره`,  layout: "__rtl" });
-});
-app.get('/billingfa', authMiddleware, (req, res) => {
-  res.render('billingfa', { title:`صورتحساب`,  layout: "__rtl" });
-});
-app.get('/profilefa', authMiddleware, (req, res) => {
-  res.render('profilefa', { title:`اطلاعات شخصی`,  layout: "__rtl" });
-});
-app.get('/tablesfa', authMiddleware, (req, res) => {
-  res.render('dashTablefa', { title:`جدول ها`,  layout: "__rtl" });
-});
-app.get('/load-form', (req, res) => {
-  res.render('partials/__fullform', { layout: false});
-});
 
-
+// Forms routes
+ 
+app.get('/Nick-Cash-Buyer', (req, res) => {
+  res.render('cashbuyers', { title:` Nick's Cash Buyers Form `, layout: false});
+});
+app.get('/tcash', (req, res) => {
+  res.render('tcash', { title:` Nick Cash Buyers Form `, layout: false});
+});
 
 
 
