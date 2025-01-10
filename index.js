@@ -38,6 +38,14 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/auth', authRoutes);
 app.use('/api', cbform);
 
+// Terms of Service/Privacy Policy 
+app.get('/privacy-policy', (req, res) => {
+  res.render('privacy-policy', { title: `Nick House Buyer Privacy Policy ` });
+});
+app.get('/terms-of-service', (req, res) => {
+  res.render('terms-of-service', { title: `Nick House Buyer Terms Of Service` });
+});
+
 
 // public routes
 app.get('/', (req, res) => {
@@ -47,6 +55,15 @@ app.get('/', (req, res) => {
 // Handle blogs routes (e.g., about page)
 app.get('/Blogs', (req, res) => {
   res.render('Blogs', { title:' Blogs'  });
+});
+
+app.get('/Blogs2', (req, res) => {
+  res.render('Blogs2', { title:' Blogs2'  });
+});
+
+
+app.get('/Blog', (req, res) => {
+  res.render('Blog', { title:' Blog' , layout:false });
 });
 
 app.get('/signin', (req, res) => {
@@ -84,8 +101,8 @@ app.get('/billing', authMiddleware, (req, res) => {
 app.get('/Nick-Cash-Buyer', (req, res) => {
   res.render('cashbuyers', { title:` Nick's Cash Buyers Form `, layout: false});
 });
-app.get('/tcash', (req, res) => {
-  res.render('tcash', { title:` Nick Cash Buyers Form `, layout: false});
+app.get('/fastSell', (req, res) => {
+  res.render('fastSell', { title:` Fast sell House `, layout: false});
 });
 
 

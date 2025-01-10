@@ -1,24 +1,87 @@
-        <div class="col-lg-6 col-md-5 d-flex align-items-center justify-content-center">
-          <div
-            class="form-container bg-white p-4 rounded shadow"
-            style="width: 80%;"
-          >
-            <h5 class="text-center mb-3">Get a Cash Offer</h5>
-            <form action="/submit-form" method="post">
- <!--             <div class="mb-3">
-                <label for="name" class="form-label"></label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Your Name" required />
+<div class="col-md-6">
+  <div class=" border  shadow-0 mb-3 glass-card" style="height: 300px; width: 100%;">
+    <div class="card-body rounded-4 text-light px-5 pt-4 pb-2">
+      <form id="Preview-form" action="/api/fastSell" method="POST" class="text-center" novalidate>
+        <!-- Section 1: Basic Information -->
+        <div id="section-1" class="form-section">
+          <h4 class="text-white">Get Fair Cash Offer Now</h4>
+          <br>
+          <div class="row mb-4">
+            <div class="col">
+              <div data-mdb-input-init class="form-outline">
+                <input name="FullName" type="text" id="name" class=" text-dark form-control" required />
+                <label class="form-label" for="name">Full Name</label>
               </div>
-              <div class="mb-3">
-                <label for="phone" class="form-label"></label>
-                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Your Phone Number" required />
+            </div>
+            <div class="col">
+              <div data-mdb-input-init class="form-outline">
+                <input name="PhoneNumber" type="tel" id="number" class=" text-secondary form-control" required />
+                <label class="form-label" for="number">Phone Number</label>
               </div>
-   -->           
-              <div class="mb-3">
-                <label for="address" class="form-label"></label>
-                <input type="text" id="address" name="address" class="form-control" placeholder="Property Address" required />
-              </div>
-              <button type="submit" class="btn btn-primary w-100">Submit</button>
-            </form>
+
+            </div>
           </div>
-        </div>
+          <div class="row mb-4">
+            <div class="col">
+              <div data-mdb-input-init class="form-outline">
+                <input name="PropertyAddress" type="text" id="PropertyAddress" class=" text-danger form-control" required />
+                <label class="form-label" for="PropertyAddress">Property Address </label>
+              </div>
+            </div>
+            <div class="text-center card-footer bg-transparent">
+              <button  type="button" class="btn btn-success" onclick="showNextSection(2)">Submit</button>
+            </div>
+          </div>
+
+          <!-- Section 9: Additional Information -->
+          <div id="section-9" class="form-section hidden-section">
+            <div class="mb-4">
+              <div data-mdb-input-init class="form-outline">
+                <textarea class=" text-secondary form-control" id="additionalInfo" name="SpecificRequests"
+                  rows="4"></textarea>
+                <label class="form-label">Do you have any specific requests or expectations?</label>
+              </div>
+            </div>
+            <!-- Terms of Service Checkbox -->
+            <div class="mb-4">
+              <div class="form-check text-center">
+                <input class="form-check-input" type="checkbox" name="tos" id="termsCheck" required />
+                <label class="form-check-label" for="termsCheck">
+                  I agree to the <a href="/terms-of-service" target="_blank">Terms of Service</a>
+                </label>
+              </div>
+            </div>
+
+
+            <div class="text-center">
+              <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+
+          <!-- Section 10: Response Message -->
+          <div id="section-10" class="form-section hidden-section">
+            <div class="mb-4">
+              <div>
+                <p id="responseMessage"></p>
+              </div>
+            </div>
+            <div class="text-center">
+              <a href="/" type="button" class="btn btn-primary">Home</a>
+              <a href="/blogs" type="button" class="btn btn-primary">Our Blogs</a>
+            </div>
+          </div>
+
+      </form>
+
+
+
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- MDB -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -164,7 +164,7 @@ function handlePageLoad() {
 
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "/cashbuyers"; // Redirect to blogs on confirmation
+        window.location.href = "/Nick-Cash-Buyer"; // Redirect to blogs on confirmation
       }
     });
   }

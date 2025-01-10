@@ -5,7 +5,7 @@ const validator = require('validator');
 const validateAndSanitize = require('../middleware/validateAndSanitize');
 const router = express.Router();
 require('dotenv').config();
-const dbConfig = require('../config/db'); 
+const dbConfig = require('../config/db');
 
 
 // POST route for form submission
@@ -111,45 +111,52 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
             .query(query);
 
 
-            const sendEmail = require('../models/mailer');
+        const { sendEmail, sendEmailWithTemplate } = require('../models/mailer');
 
-            const sendEmails = async (sanitizedFormData) => {
-                try {
-                    // Send email to admin
-                    try {
-                        const adminRecipients = [{ email: process.env.RECIPIENT_EMAIL1, name: 'Admin' }];
-                        const adminSubject = 'New Cash Buyer Form Submission';
-                        const adminHtml = `
+
+        console.log('Incoming req.body:', req.body);
+        console.log('Sanitized Form Data:', sanitizedFormData);
+        console.log('Admin Email:', process.env.RECIPIENT_EMAIL1);
+        console.log('Client Email:', sanitizedFormData.Email);
+
+
+        const sendEmails = async () => {
+            console.log('Client Email:', sanitizedFormData);
+
+
+            // Send email to admin
+            try {
+                const adminRecipients = [{ email: process.env.RECIPIENT_EMAIL1, name: 'Admin' }];
+                const adminSubject = 'New Cash Buyer Form Submission';
+                const adminHtml = `
                             <strong>New submission received from ${sanitizedFormData.FullName}:</strong><br>
                             <p>${JSON.stringify(sanitizedFormData, null, 2)}</p>`;
-                        const adminText = `New submission from ${sanitizedFormData.FullName}`;
-            
-                        await sendEmail(adminRecipients, adminSubject, adminText, adminHtml);
-                        console.log('Admin email sent successfully.');
-                    } catch (error) {
-                        console.error('Failed to send admin email:', error.message);
-                    }
-            
-                    // Send thank-you email to client
-                    try {
-                        const clientRecipient = { email: sanitizedFormData.Email, name: sanitizedFormData.FullName };
-                        const clientTemplateId = 'your-template-id'; // Replace with your actual template ID
-                        const clientTemplateData = {
-                            name: sanitizedFormData.FullName,
-                            message: 'Thank you for submitting the Cash Buyer Form. Our team will get back to you shortly!',
-                        };
-            
-                        await sendEmailWithTemplate([clientRecipient], clientTemplateId, clientTemplateData);
-                        console.log('Client email sent successfully.');
-                    } catch (error) {
-                        console.error('Failed to send client email:', error.message);
-                    }
-                } catch (error) {
-                    console.error('Unexpected error in sendEmails:', error.message);
-                }
-            };
-            
-            sendEmails();
+                const adminText = `New submission from ${sanitizedFormData.FullName}`;
+
+                await sendEmail(adminRecipients, adminSubject, adminText, adminHtml);
+                console.log('Admin email sent successfully.');
+            } catch (error) {
+                console.error('Failed to send admin email:', error.message);
+            }
+
+            // Send thank-you email to client
+            try {
+                const clientRecipient = { email: sanitizedFormData.Email, name: sanitizedFormData.FullName };
+                const clientTemplateId = 'your-template-id'; // Replace with your actual template ID
+                const clientTemplateData = {
+                    name: sanitizedFormData.FullName,
+                    message: 'Thank you for submitting the Cash Buyer Form. Our team will get back to you shortly!',
+                };
+
+                await sendEmailWithTemplate([clientRecipient], clientTemplateId, clientTemplateData);
+                console.log('Client email sent successfully.');
+            } catch (error) {
+                console.error('Failed to send client email:', error.message);
+            }
+
+        };
+
+        sendEmails();
 
         const successMessage = encodeURIComponent("Form submitted successfully!");
         res.redirect(`${referrer}?success=true&message=${successMessage}`);

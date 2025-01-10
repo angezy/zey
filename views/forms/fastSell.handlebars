@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cash Buyer Registration Form - Find High-Quality Real Estate Investment Deals</title>
+  <title>Fast Sell Your Florida House</title>
   <meta name="description"
     content="Register as a cash buyer with Nick's Real Estate Services to access high-quality investment properties. Tailor your buying criteria and discover profitable real estate deals today.">
   <meta name="keywords"
@@ -25,71 +25,44 @@
   <section id="bg">
     <div class="container py-5">
       <div class="row d-flex align-items-center justify-content-center">
-        <h2 class="text-center text-dark-emphasis">Nick's Cash Buyer Form</h2>
-        <p class="text-muted  text-center">We ensure you receive high-quality properties tailored to your criteria.</p>
+        <h2 class="text-center text-dark-emphasis">Fast sell House </h2>
+        <p class="text-muted  text-center">.</p>
 
         <div class="col-md-6">
           <div class=" border  shadow-0 mb-3 glass-card" style="width: 100%;">
             <div class="card-body rounded-4 text-light px-5 pt-4 pb-2">
 
-
-              <form id="cash-buyer-form" action="/api/cbForm" method="POST" class="text-center" novalidate>
-                <!-- Section 1: Basic Information -->
-                <div id="section-1" class="form-section">
-                  <h4 class="text-secondary">Basic Information</h4>
-                  <br>
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="FullName" type="text" id="name" placeholder="John Doe"
-                          class="text-secondary form-control" required />
-                        <label class="form-label" for="name">First & Last Name *</label>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="CompanyName" type="text" id="company" placeholder="Johns Real Estate"
-                          class="text-secondary form-control" />
-                        <label class="form-label" for="company">Company Name</label>
-                      </div>
+            <form id="Preview-form" action="/api/fastSell" method="POST" class="text-center" novalidate>
+              <!-- Section 1: Basic Information -->
+              <div id="section-1" class="form-section">
+                <h4 class="text-dark">Basic Information</h4>
+                <br><br>
+                <div class="row mb-4">
+                  <div class="col">
+                    <div data-mdb-input-init class="form-outline">
+                      <input name="FullName" type="text" id="name" class=" text-dark form-control" required />
+                      <label class="form-label" for="name">Full Name</label>
                     </div>
                   </div>
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="Website" type="url" id="website" placeholder="John-Real-Estate.com"
-                          class="text-secondary form-control" />
-                        <label class="form-label" for="website">Website</label>
-                      </div>
+                  <div class="col">
+                    <div data-mdb-input-init class="form-outline">
+                      <input name="Email" type="email" id="email" class=" text-secondary form-control" required />
+                      <label class="form-label" for="email">Email Address</label>
                     </div>
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="CellPhone" type="tel" id="phone" placeholder="(123)-123-1234"
-                          class="text-secondary form-control" required />
-                        <label class="form-label" for="phone">Cell Phone*</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="Email" type="email" id="email" placeholder="JohnDoe@Email.com"
-                          class="text-secondary form-control" required />
-                        <label class="form-label" for="email">Direct Email*</label>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="Address" type="text" id="address" placeholder="Tampa, FL"
-                          class="text-secondary form-control" required />
-                        <label class="form-label" for="address">Address* (City/State)</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-center bg-transparent">
-                    <button type="button" class="btn btn-primary" onclick="navigateSection(1, 2)">Next</button>
                   </div>
                 </div>
+                <div class="row mb-4">
+                  <div class="col">
+                    <div data-mdb-input-init class="form-outline">
+                      <input name="PhoneNumber" type="tel" id="number" class=" text-secondary form-control" required />
+                      <label class="form-label" for="number">Phone Number</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center bg-transparent">
+                  <button type="button" class="btn btn-primary" onclick="showNextSection(2)">Submit</button>
+                </div>
+              </div>
                 <!-- Section 2: Experience & Activity -->
                 <div id="section-2" class="form-section hidden-section">
                   <h4>Experience & Activity</h4>

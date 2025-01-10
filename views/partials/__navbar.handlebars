@@ -1,9 +1,10 @@
   <!-- Navbar -->
 <nav class="navbar navbar-expand-lg position-sticky z-index-sticky  top-0 navbar-light bg-white py-3">
   <div class="container-fluid px-0">
-    <a class="navbar-brand font-weight-bolder ms-sm-3 text-sm" href="/" rel="tooltip" title="Nick Property" data-placement="bottom" target="_blank">
-      <img src="/public/images/logo.jpg" alt="Nick Property Logo" style="height: 30px; margin-left: 8px;">
-       Nick Property
+    <a class="navbar-brand font-weight-bolder ms-sm-3 text-sm" href="/" rel="tooltip" title="Nick Property"
+     data-placement="bottom" target="_blank">
+      <img src="/public/images/24.png" alt="Nick Property Logo" style="height: 50px; margin-left: 8px;">
+       Nick House Buyer
     </a>
     <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon mt-2">
@@ -20,7 +21,7 @@
           <a class="nav-link nav-link-icon me-2" href="/" target="_blank">
             <i class="material-symbols-rounded opacity-6 me-2 text-md">home</i>
             <p class="d-inline text-sm z-index-1 font-weight-semibold" data-bs-toggle="tooltip"
-             data-bs-placement="bottom" title="HomE">Home</p>
+             data-bs-placement="bottom" title="Home">Home</p>
           </a>
         </li>
 
@@ -29,7 +30,7 @@
           <a class="nav-link nav-link-icon me-2" href="/aboutus" target="_blank">
             <i class="material-symbols-rounded opacity-6 me-2 text-md">source_environment</i>
             <p class="d-inline text-sm z-index-1 font-weight-semibold" data-bs-toggle="tooltip" 
-            data-bs-placement="bottom" title="Star us on Github">About Us</p>
+            data-bs-placement="bottom" title="About Us">About Us</p>
           </a>
         </li>
 
@@ -40,19 +41,19 @@
 
 
         <li class="nav-item ms-lg-auto">
-          <a class="nav-link nav-link-icon me-2" href="/article" target="_blank">
+          <a class="nav-link nav-link-icon me-2" href="/Blogs" target="_blank">
             <i class="material-symbols-rounded opacity-6 me-2 text-md">article</i>
             <p class="d-inline text-sm z-index-1 font-weight-semibold" data-bs-toggle="tooltip"
-             data-bs-placement="bottom" title="articles">articles</p>
+             data-bs-placement="bottom" title="Blogs">Blogs</p>
           </a>
         </li>
 
 
         <li class="nav-item ms-lg-auto">
-          <a class="nav-link nav-link-icon me-2" href="/help" target="_blank">
+          <a class="nav-link nav-link-icon me-2" href="/Faq" target="_blank">
             <i class="material-symbols-rounded opacity-6 me-2 text-md">shield_question</i>
             <p class="d-inline text-sm z-index-1 font-weight-semibold" data-bs-toggle="tooltip"
-             data-bs-placement="bottom" title="Help Center">Help Center</p>
+             data-bs-placement="bottom" title="How It's Work">How It's Work</p>
           </a>
         </li>
 
@@ -71,7 +72,7 @@
         <li class="nav-item my-auto ms-3 ms-lg-0"> 
           
           
-          <a href="/cashoffer" class="btn  bg-gradient-dark  mb-0 mt-2 mt-md-0"
+          <a href="/cashoffer" class="btn  bg-gradient-danger  mb-0 mt-2 mt-md-0"
           ><i class="material-symbols-rounded opacity-6 me-2 text-md">payments</i>Cash Offer</a>
           
         </li>
@@ -83,3 +84,18 @@
 </nav>
 <!-- End Navbar -->
 </div></div>
+
+<script>
+  // Get the navbar toggle button and the navigation menu
+  const navbarToggler = document.querySelector('.navbar-toggler');
+  const navbarCollapse = document.querySelector('#navigation');
+
+  // Listen for the scroll event
+  window.addEventListener('scroll', function () {
+    // Check if the navbar is collapsed
+    if (navbarCollapse.classList.contains('show')) {
+      // Remove the 'show' class to close the hamburger menu
+      navbarToggler.click();
+    }
+  });
+</script>

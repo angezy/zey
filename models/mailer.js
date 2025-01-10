@@ -6,7 +6,7 @@ const sendPulseConfig = {
   clientId: process.env.API_ID,
   clientSecret: process.env.API_SECRET,
   senderEmail: process.env.SENDER_EMAIL,
-  senderName: process.env.SENDER_NAME || 'Nick Web Admin',
+  senderName: process.env.SENDER_NAME ,
 };
 
 let accessToken = null;
