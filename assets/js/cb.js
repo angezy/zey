@@ -19,7 +19,11 @@ function navigateSection(currentSectionId, targetSectionId) {
   if (targetSectionId > currentSectionId) {
     // Moving forward: validate required fields
     if (!validateSection($currentSection)) {
-      alert('Please fill out all required fields before proceeding.');
+      Swal.fire({
+        title: "Please fill out all required fields before proceeding.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
       return;
     }
   }
@@ -160,7 +164,7 @@ function handlePageLoad() {
       icon: "success",
       confirmButtonText: "OK",
       confirmButtonColor: "#28a745", // Green color for the OK button
-    //  footer: `<a  href="/blogs">Refer to the blog page for guidance</a>`,
+      //  footer: `<a  href="/blogs">Refer to the blog page for guidance</a>`,
 
     }).then((result) => {
       if (result.isConfirmed) {

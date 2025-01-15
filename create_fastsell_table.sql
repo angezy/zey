@@ -1,0 +1,22 @@
+CREATE TABLE dbo.fastsell_tbl (
+    fastSellId INT IDENTITY(1,1) PRIMARY KEY,
+    FullName NVARCHAR(255) NOT NULL,
+    PropertyAddress NVARCHAR(255) NOT NULL,
+    City NVARCHAR(100) NOT NULL,
+    State NVARCHAR(100) NOT NULL,
+    ZipCode NVARCHAR(20) NOT NULL,
+    PropertyType NVARCHAR(100) NOT NULL,
+    Bedrooms INT,
+    Bathrooms INT,
+    SquareFootage INT,
+    LotSize NVARCHAR(100),
+    YearBuilt INT,
+    PropertyCondition NVARCHAR(100),
+    AskingPrice FLOAT,
+    ReasonForSelling NVARCHAR(255),
+    Timeframe NVARCHAR(100),
+    ContactPhone NVARCHAR(20) NOT NULL,
+    ContactEmail NVARCHAR(255) NOT NULL,
+    AdditionalComments NVARCHAR(MAX),
+    SubmitDate DATETIME NOT NULL DEFAULT GETDATE()
+);

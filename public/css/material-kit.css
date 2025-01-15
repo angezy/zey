@@ -97,13 +97,13 @@
   --bs-tertiary-bg: #f5f5f5;
   --bs-tertiary-bg-rgb: 245, 245, 245;
   --bs-heading-color: #262626;
-  --bs-link-color: #e91e63;
+  --bs-link-color: #8f060e;
   --bs-link-color-rgb: 233, 30, 99;
   --bs-link-decoration: none;
-  --bs-link-hover-color: #e91e63;
-  --bs-link-hover-color-rgb: 233, 30, 99;
+  --bs-link-hover-color:  #8f060e;
+  --bs-link-hover-color-rgb: 143,6,14,1;
   --bs-link-hover-decoration: none;
-  --bs-code-color: #d63384;
+  --bs-code-color: #8f060e;
   --bs-highlight-color: #737373;
   --bs-highlight-bg: #fcf8e3;
   --bs-border-width: 1px;
@@ -22120,9 +22120,9 @@ fieldset:disabled .btn {
 
 .btn-danger:hover,
 .btn.bg-gradient-danger:hover {
-  background-color: #8f0606;
-  border-color: #8f0606;
-  box-shadow: 0 8px 14px -8px rgba(143, 6, 6, 0.3), 0 3px 18px 0 rgba(143, 6, 6, 0.1), 0 7px 8px -4px rgba(143, 6, 6, 0.18);
+  background-color: #e30707;
+  border-color: #e30707;
+  box-shadow: 0 8px 14px -8px rgba(224, 27, 27, 0.3), 0 3px 18px 0 rgba(224, 27, 27, 0.1), 0 7px 8px -4px rgba(143, 6, 6, 0.18);
 }
 
 .btn-danger .btn.bg-outline-danger,
@@ -23990,7 +23990,7 @@ label,
 }
 
 .footer .nav-link {
-  color: #262626;
+  color: #3565e1;
   font-weight: 400;
   font-size: 0.875rem;
   padding-top: 0;
@@ -23998,6 +23998,7 @@ label,
 }
 
 .footer .nav-link:hover {
+  color: #8f060e; 
   opacity: 1 !important;
   transition: opacity 0.3 ease;
 }

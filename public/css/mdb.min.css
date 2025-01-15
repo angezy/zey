@@ -19810,7 +19810,7 @@ fieldset:disabled .btn-group-vertical>.btn {
 }
 
 .nav-tabs .nav-link:hover {
-    background-color: var(--mdb-nav-tabs-link-hover-bgc);
+    background-color: #8f060e ;
     border-color: rgba(0, 0, 0, 0)
 }
 
@@ -19820,7 +19820,7 @@ fieldset:disabled .btn-group-vertical>.btn {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-    color: var(--mdb-nav-tabs-link-active-color);
+    color:#8f060e ;
     border-color: var(--mdb-nav-tabs-link-active-border-color)
 }
 
@@ -20879,19 +20879,7 @@ fieldset:disabled .btn-group-vertical>.btn {
 
 
 
-.header-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the video covers the header area */
-    z-index: -2; /* Behind both overlay and content */
-  }
-
-
-
-  .glass-card {
+.glass-card {
     background: rgba(255, 255, 255, 0.1); /* Light translucent background */
     backdrop-filter: blur(10px);         /* Frosted glass effect */
     -webkit-backdrop-filter: blur(10px); /* Support for older browsers */
@@ -20901,70 +20889,50 @@ fieldset:disabled .btn-group-vertical>.btn {
   }
   
 
-  /* Entire Page Blur When Modal is Active */
-  body.modal-open {
-    overflow: hidden; /* Prevent scrolling */
-  }
-
-  .modal-backdrop.show {
-    backdrop-filter: blur(10px); /* Blur everything behind the modal */
-    background-color: rgba(0, 0, 0, 0.4); /* Add a dark overlay with transparency */
-  }
-
-  /* Modal Content Styles */
-  .modal-content {
-    background: linear-gradient(135deg, #1c39bb, #d3d3d3); /* Persian blue to light gray gradient */
-    border: none;
-    border-radius: 15px;
-    color: #fff; /* Ensure text is readable on gradient */
-    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.5); /* Stronger shadow for focus */
-    position: relative;
-    z-index: 1050;
-  }
-
-  /* Modal Header */
-  .modal-header {
-    border-bottom: none;
-    justify-content: center;
-  }
-
-  .modal-title {
-    font-weight: bold;
-    font-size: 1.5rem;
-  }
-
-  /* Modal Body */
-  .modal-body {
+  
+  .faq-section {
     text-align: center;
-    font-size: 1.1rem;
-    color: #fff;
-  }
-
-  /* Buttons in Modal Footer */
-  .modal-footer .btn {
-    border-radius: 25px;
-    padding: 0.5rem 1.5rem;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.faq-header {
+    background-color: #3b71ca;
+    padding: 20px;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+    color: #332d2d;
+    font-size: 24px;
     font-weight: bold;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-  }
-
-  .modal-footer .btn-primary {
-    background-color: #1c39bb;
-    border: none;
-  }
-
-  .modal-footer .btn-primary:hover {
-    background-color: #162c89;
-    transform: translateY(-2px);
-  }
-
-  .modal-footer .btn-secondary {
-    background-color: #d3d3d3;
-    color: #1c39bb;
-    border: none;
-  }
-
-  .modal-footer .btn-secondary:hover {
-    background-color: #b5b5b5;
-    transform: translateY(-2px);
-  }
+}
+.faq-item {
+    margin: 10px 0;
+}
+.faq-question {
+    background-color: #3b71ca;
+    color: #332d2d;
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+.faq-answer {
+    display: none;
+    padding: 10px 20px;
+    border-left: 3px solid #3b71ca;
+    margin-top: 10px;
+}
+.read-more {
+    display: block;
+    width: 150px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #3b71ca;
+    color: #332d2d;
+    text-align: center;
+    border-radius: 20px;
+    text-decoration: none;
+}

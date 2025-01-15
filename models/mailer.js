@@ -51,7 +51,7 @@ const sendEmail = async (recipients, subject, text, html, fromName = sendPulseCo
       `${sendPulseConfig.apiUrl}/smtp/emails`,
       {
         email: {
-          from: { name: fromName, email: fromEmail },
+          from: { name: fromName|| "info@nickhousebuyer.online", email: fromEmail || process.env.SENDER_EMAIL },
           to: toRecipients,
           subject,
           text,

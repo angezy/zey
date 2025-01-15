@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Your Property Listing</title>
+  <meta name="description"
+    content="Register as a cash buyer with Nick's Real Estate Services to access high-quality investment properties. Tailor your buying criteria and discover profitable real estate deals today.">
+  <meta name="keywords"
+    content="cash buyer form, real estate deals, investment properties, wholesale real estate, buy investment properties, real estate buyers, high ROI real estate">
+  <meta name="author" content="Nick's Real Estate Services">
+  <meta name="robots" content="index, follow">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link rel="stylesheet" href="../public/css/mdb.min.css" />
+  <link rel="stylesheet" href="/assets/css/cs.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <section id="bg">
+    <div class="container py-5">
+      <div class="row d-flex align-items-center justify-content-center">
+
+        <p class="text-muted  text-center">.</p>
+
+        <div class="col-md-6">
+          <div class=" border  shadow-0 mb-3 glass-card" style="width: 100%;">
+            <div class="card-body rounded-4 text-light px-5 pt-4 pb-2">
+              <h2 class="text-center">Submit Your Property Listing</h2>
+              <form action="/api/listing" method="POST" class="text-center" novalidate>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="FullName" type="text" class="form-control" required />
+                  <label class="form-label">Full Name</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="Email" type="email" class="form-control" required />
+                  <label class="form-label">Email</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="Phone" type="tel" class="form-control" required />
+                  <label class="form-label">Phone Number</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="PropertyAddress" type="text" class="form-control" required />
+                  <label class="form-label">Property Address</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="PropertyType" type="text" class="form-control" required />
+                  <label class="form-label">Property Type</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="Bedrooms" type="number" class="form-control" required />
+                  <label class="form-label">Number of Bedrooms</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="Bathrooms" type="number" class="form-control" required />
+                  <label class="form-label">Number of Bathrooms</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="SquareFootage" type="number" class="form-control" required />
+                  <label class="form-label">Square Footage</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="AskingPrice" type="number" class="form-control" required />
+                  <label class="form-label">Asking Price</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <textarea name="Description" class="form-control" rows="3" required></textarea>
+                  <label class="form-label">Description</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input name="ReasonForSelling" type="text" class="form-control" required />
+                  <label class="form-label">Reason for Selling</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Listing</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <!-- MDB -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!--   Core JS Files   -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="/assets/js/form.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
