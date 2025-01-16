@@ -2,7 +2,6 @@ const express = require('express');
 const sql = require('mssql');
 const { body, validationResult } = require('express-validator');
 const validator = require('validator');
-const validateAndSanitize = require('../middleware/validateAndSanitize');
 const router = express.Router();
 const axios = require('axios'); // Add axios for making HTTP requests
 require('dotenv').config();
@@ -131,31 +130,35 @@ router.post('/fastSell',  async (req, res) => {
     }
 });
 
-// New route for address autocomplete
+
 router.get('/autocomplete', async (req, res) => {
     const query = req.query.query.trim(); // Trim whitespace
     const queryBytes = Buffer.byteLength(query, 'utf8'); // Measure byte size
 
-    if (!query || queryBytes < 1 || queryBytes > 127) {
+    if (!query || queryBytes < 7 || queryBytes > 127) {
         return res.status(400).json({ error: 'Query must be between 1 and 127 bytes.' });
     }
 
-    
-
     try {
-        console.log('key from .env :',process.env.key)
-const response = await axios.get(`https://us-autocomplete-pro.api.smarty.com/lookup?key=${process.env.key}&input=${encodeURIComponent(query)}`, {
-    headers: {
-          'Referer': 'https://yourwebsite.com' // Ensure this matches the domain for your embedded key
-    }
-});
-        const suggestions = response.data.map(item => ({
-            display_name: `${item.delivery_line_1}, ${item.last_line}`
-        }));
-        res.json(suggestions);
+        const response = await axios.get('https://us-autocomplete-pro.api.smarty.com/lookup', {
+            params: {
+                'auth-id': process.env.authID, // Replace with your actual auth-id
+                'search': query, // Use the input query
+                'auth-token': process.env.authToken // Replace with your actual auth-token
+            },
+        });
+
+        // Check if 'suggestions' exists and is an array
+        if (Array.isArray(response.data.suggestions)) {
+            const suggestions = response.data.suggestions.map(item => ({
+                display_name: `${item.street_line}, ${item.city}, ${item.state} ${item.zipcode}`
+            }));
+            return res.json(suggestions);
+        } else {
+            // If 'suggestions' is not an array, return an error
+            return res.status(500).json({ error: 'Unexpected API response structure.' });
+        }
     } catch (error) {
-        console.error('Error fetching autocomplete suggestions:', error.message);
-        console.error('Error details:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Failed to fetch suggestions' });
     }
 });
