@@ -1,18 +1,17 @@
-
 </head>
 
 <body class="index-page bg-gray-200">
-  
-    {{> __navbar}}
 
-  <div class="page-header min-vh-80" style="background-image: url('https://images.unsplash.com/photo-1630752708689-02c8636b9141?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2490&q=80')">
-    <span class="mask bg-gradient-dark opacity-6"></span>
+  {{> __navbar}}
+
+  <div class="page-header ima min-vh-80"
+    style="background-image: url('https://images.unsplash.com/photo-1630752708689-02c8636b9141?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2490&q=80')">
+    <span class="mask btn bg-gradient-dark opacity-6"></span>
     <div class="container">
       <div class="row">
         <div class="col-md-8 mx-auto">
           <div class="text-center">
-            <h1 class="text-white">Read Our Blogs to Ready for <br>Fast Sell House Smoothly</h1>
-            <h3 class="text-white">Nick Housee Buyer Blogs</h3>
+            <h1 class="text-white">Read Nick House Buyer Blogs to Ready for Fast Sell House</h1>
           </div>
         </div>
       </div>
@@ -23,35 +22,6 @@
       <div class="section text-center">
 
 
-<!-- blog section -->
-<section class="section" id="blog">
-    <!-- container -->
-    <div class="container text-center">
-        <p class="section-subtitle">Recent Posts?</p>
-        <h6 class="section-title mb-6">Blog</h6>
+          {{> __blogs}}
 
-        <!-- blog-wrapper -->
-        {{#each blogs}}
-        <div class="blog-card">
-            <div class="blog-card-header">
-                <img src={{this.Imag}} class="blog-card-img" alt={{this.Title}}>
-            </div>
-            <div class="blog-card-body">
-                <h5 class="blog-card-title">{{this.Title}}</h5>
-                <p class="blog-card-caption">
-                    <a href="#">Last Updated: {{this.CreatedAt}}</a>
-                    <a href="#"><i class="ti-heart text-danger"></i> 120</a>
-                    <a href="#"><i class="ti-comment"></i> 45</a>
-                </p>
-                <p>{{this.Description}}</p>
-                <a href=/blog/{{this.postId}} class="blog-card-link"> Read More<i class="ti-angle-double-right"></i></a>
-            </div>
-        </div>
-        {{/each}}
-        <!-- end of blog wrapper -->
-
-    </div><!-- end of container -->
-</section><!-- end of blog section -->
-
-
-  {{> __footer}}
+        {{> __footer}}

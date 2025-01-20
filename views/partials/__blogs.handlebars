@@ -2,58 +2,43 @@
   <div class="container">
     <div class="row">
       <div class="row text-center my-sm-3 mt-5">
-        <div class="col-lg-6 mx-auto">
-          <a href="/cashoffer"
-           target="_blank" class="badge bg-success mb-3">Get Fair Cash Offer</a>
+        <div class="btn bg-gradient-primary col-lg-6 mx-auto">
+
           <h2 class="">Sell Your Florida Home Fast <br> No Matter the Situation</h2>
+        </div>
           <p class="lead">We recognize that every homeowner faces unique challenges<br>
              and no matter your situation<br>
              we’re here to provide tailored solutions to help you move forward with confidence. </p>
-        </div>
       </div>
     </div>
   </div>
   <div class="container mt-5">
     <div class="row">
+
       <div class="col-md-8">
         <div class="row mt-4">
+              {{#each blogs}}
           <div class="col-md-6">
-            <a href="./pages/blogs/7tips" class="center">
+            <a href=/blog/{{this.postId}} class="center">
               <div class="card move-on-hover">
-                <img class="w-100" src="/public/images/fastsell.png" alt="aboutus">
-                 <h4 class="">Seven Tips for Selling House Quickly </h4>
-                 <h6 class="text-secondary font-weight-normal">you can sell your house quickly and with minimum hassle.
-                  <br> In this article, we'll provide you with seven tips that will help you achieve your goal.
-                  </h6>
+                <img class="w-100" src={{this.Imag}} alt={{this.Title}}>
+                 <h4 class="">{{this.Title}} </h4>
+                 <h6 class="text-secondary font-weight-normal">{{this.Description}}</h6>
               </div>
               <div class="mt-2 ms-2">
 
               </div>
             </a>
           </div>
-          <div class="col-md-6 mt-md-0 mt-5">
-            <a href="./pages/blogs/calculate-taxes" class="center">
-              <div class="card move-on-hover">
-                <img class="w-100" src="/public/images/fastsell.png" alt="aboutus">
-                 <h4 class="">How to calculate sell taxes </h4>
-                 <h6 class="text-secondary font-weight-normal"> 
-                  State and local taxes are a major factor in the cost of selling your home.<br>
-                   You can expect to pay anywhere from 3% to 5% of your sale price in state and local taxes,
-                    depending on where you live.
-                  </h6>
-              </div>
-              <div class="mt-2 ms-2">
+          {{/each}}
 
-              </div>
-            </a>
-          </div>
           <div class="col-md-6 mt-md-3 mt-6">
             <a href="./pages/blogs/Pre-foreclosure" class="center">
               <div class="card move-on-hover">
                 <img class="w-100" src="/public/images/fastsell.png" alt="aboutus">
                  <h4 class="">Everything You Need to Know About Pre-Foreclosure</h4>
                  <h6 class="text-secondary font-weight-normal">
-                  At Nick Property, we simplify the process and help you take control.
+                  At Nick House Buyer, we simplify the process and help you take control.
                    <br>Learn how to navigate pre-foreclosure, explore your options to avoid losing your home,
                    and discover stress-free solutions tailored to your unique situation.
                  </h6>
@@ -82,7 +67,7 @@
       </div>
       <div class="col-md-3 mx-auto mt-md-0 mt-5">
         <div class="position-sticky" style="top:100px !important">
-          <h4 class="">At Nick Property,<br>
+          <h4 class="">At Nick House Buyer,<br>
             our mission is to make selling your home effortless and stress-free.</h4>
           <h6 class="text-secondary font-weight-normal">
               We'll take care of all the paperwork and closing costs,
@@ -90,7 +75,7 @@
             </h6>
             <h6 class="text-secondary font-weight-normal">
               Explore our blog to gain valuable insights into managing your property situation and 
-              preparing yourself for a hassle-free selling experience with Nick Property.
+              preparing yourself for a hassle-free selling experience with Nick House Buyer.
               <br>We're here to make it easy for you, every step of the way!
             </h6>
             <a href="/blogs"

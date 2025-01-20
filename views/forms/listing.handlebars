@@ -16,9 +16,8 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
   <!-- MDB -->
-  <link rel="stylesheet" href="../public/css/mdb.min.css" />
+  <link rel="stylesheet" href="/public/css/mdb.min.css" />
   <link rel="stylesheet" href="/assets/css/cs.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -49,10 +48,20 @@
                   <input name="PropertyAddress" type="text" class="form-control" required />
                   <label class="form-label">Property Address</label>
                 </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="PropertyType" type="text" class="form-control" required />
-                  <label class="form-label">Property Type</label>
-                </div>
+<div data-mdb-input-init class="form-outline">
+  <select name="PropertyType" id="propertyType" class="text-dark form-control" required>
+    <option value=""> </option>
+    <option value="Single Family Home">Single Family Home</option>
+    <option value="Multi Family">Multi Family</option>
+    <option value="Condo">Condo</option>
+    <option value="Townhouse">Townhouse</option>
+    <option value="Apartment">Apartment</option>
+    <option value="Triplex">Triplex</option>
+    <option value="Fourplex">Fourplex</option>
+    <option value="Other">Other</option>
+  </select>
+  <label class="form-label" for="propertyType">Property Type</label>
+</div>
                 <div data-mdb-input-init class="form-outline mb-4">
                   <input name="Bedrooms" type="number" class="form-control" required />
                   <label class="form-label">Number of Bedrooms</label>
@@ -86,6 +95,7 @@
     </div>
   </section>
 
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
   </script>
@@ -94,7 +104,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!--   Core JS Files   -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="/assets/js/form.js"></script>
+  <script src="/assets/js/listing.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 

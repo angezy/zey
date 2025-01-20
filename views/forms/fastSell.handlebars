@@ -16,16 +16,15 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
   <!-- MDB -->
-  <link rel="stylesheet" href="../public/css/mdb.min.css" />
-  <link rel="stylesheet" href="/assets/css/cs.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/public/css/mdb.min.css" />
+  <link rel="stylesheet" href="/assets/css/fastSell.css">
 </head>
 
 <body>
   <section id="bg">
     <div class="container py-5">
       <div class="row d-flex align-items-center justify-content-center">
-        <h2 class="text-center text-dark-emphasis">Fast sell House </h2>
+        <h2 class="text-center text-dark-emphasis"></h2>
         <p class="text-muted  text-center">.</p>
 
         <div class="col-md-6">
@@ -35,7 +34,7 @@
               <form id="Preview-form" action="/api/fastSell" method="POST" class="text-center" novalidate>
                 <!-- Section 1: Basic Information -->
                 <div id="section-1" class="form-section">
-                  <h4 class="text-dark">Basic Information</h4>
+                  <h4 class="text-dark">Seller Information</h4>
                   <br><br>
                   <div class="row mb-4">
                     <div class="col">
@@ -46,7 +45,8 @@
                     </div>
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
-                        <input name="ContactEmail" type="email" id="contactEmail" class=" text-secondary form-control" required />
+                        <input name="ContactEmail" type="email" id="contactEmail" class=" text-dark form-control"
+                          required />
                         <label class="form-label" for="contactEmail">Contact Email</label>
                       </div>
                     </div>
@@ -54,12 +54,21 @@
                   <div class="row mb-4">
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
-                        <input name="ContactPhone" type="tel" id="number" class=" text-secondary form-control"
-                          required />
+                        <input name="ContactPhone" type="tel" id="number" class=" text-dark form-control" required />
                         <label class="form-label" for="number">Phone Number</label>
                       </div>
                     </div>
                   </div>
+
+                  <div class="text-center bg-transparent">
+                    <button type="button" class="btn btn-primary" onclick="navigateSection(1, 2)">Next</button>
+                  </div>
+                </div>
+
+                <!-- Section 2: Property Information -->
+                <div id="section-2" class="form-section hidden-section">
+                  <h4>Property Information</h4>
+                  <br>
                   <div class="row mb-4">
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
@@ -70,80 +79,19 @@
                       <div id="autocomplete-results" class="list-group" style="display: none;"></div>
                     </div>
                   </div>
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="City" type="text" id="city" class="text-secondary form-control" required />
-                        <label class="form-label" for="city">City</label>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="State" type="text" id="state" class="text-secondary form-control" required />
-                        <label class="form-label" for="state">State</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="ZipCode" type="text" id="zipCode" class="text-secondary form-control" required />
-                        <label class="form-label" for="zipCode">Zip Code</label>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="LotSize" type="text" id="lotSize" class="text-secondary form-control" required />
-                        <label class="form-label" for="lotSize">Lot Size</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="YearBuilt" type="number" id="yearBuilt" class="text-secondary form-control" required />
-                        <label class="form-label" for="yearBuilt">Year Built</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="ReasonForSelling" type="text" id="reasonForSelling" class="text-secondary form-control" required />
-                        <label class="form-label" for="reasonForSelling">Reason for Selling</label>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="Timeframe" type="text" id="timeframe" class="text-secondary form-control" required />
-                        <label class="form-label" for="timeframe">Timeframe</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-center bg-transparent">
-                    <button type="button" class="btn btn-primary" onclick="navigateSection(1, 2)">Next</button>
-                  </div>
-                </div>
-                <!-- Section 2: Property Information -->
-                <div id="section-2" class="form-section hidden-section">
-                  <h4>Property Information</h4>
-                  <br>
 
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="PropertyType" type="text" id="propertyType" placeholder="Single Family Home"
-                          class="text-secondary form-control" required />
-                        <label class="form-label" for="propertyType">Property Type</label>
-                      </div>
-                    </div>
-                  </div>
                   <div class="row mb-4">
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
                         <input name="SquareFootage" type="number" id="squareFootage" placeholder="1500"
                           class="text-secondary form-control" required />
                         <label class="form-label" for="squareFootage">Square Footage</label>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div data-mdb-input-init class="form-outline">
+                        <input name="LotSize" type="number" id="lotSize" class="text-secondary form-control" required />
+                        <label class="form-label" for="lotSize">Lot Size</label>
                       </div>
                     </div>
                   </div>
@@ -155,13 +103,56 @@
                         <label class="form-label" for="bedrooms">Number of Bedrooms</label>
                       </div>
                     </div>
-                  </div>
-                  <div class="row mb-4">
+
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
                         <input name="Bathrooms" type="number" id="bathrooms" placeholder="2"
                           class="text-secondary form-control" required />
                         <label class="form-label" for="bathrooms">Number of Bathrooms</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div data-mdb-input-init class="form-outline">
+                        <select name="PropertyType" id="propertyType" class="text-dark form-control" required>
+                          <option value=""> </option>
+                          <option value="Single Family Home">Single Family Home</option>
+                          <option value="Multi Family">Multi Family</option>
+                          <option value="Condo">Condo</option>
+                          <option value="Townhouse">Townhouse</option>
+                          <option value="Apartment">Apartment</option>
+                          <option value="Triplex">Triplex</option>
+                          {{!-- <option value="Fourplex">Fourplex</option> --}}
+                          <option value="Other">Other</option>
+                        </select>
+                        <label class="form-label" for="propertyType">Property Type</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div data-mdb-input-init class="form-outline">
+                        <input name="YearBuilt" type="number" id="yearBuilt" class="text-secondary form-control"
+                          required />
+                        <label class="form-label" for="yearBuilt">Year Built</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div data-mdb-input-init class="form-outline">
+                        <input name="ReasonForSelling" type="text" id="reasonForSelling"
+                          class="text-secondary form-control" required />
+                        <label class="form-label" for="reasonForSelling">Reason for Selling</label>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div data-mdb-input-init class="form-outline">
+                        <input name="Timeframe" type="text" id="timeframe" class="text-secondary form-control"
+                          required />
+                        <label class="form-label" for="timeframe">Timeframe</label>
                       </div>
                     </div>
                   </div>
@@ -263,30 +254,30 @@
     const resultsContainer = document.getElementById('autocomplete-results');
 
     addressInput.addEventListener('input', async function () {
-        const query = this.value;
-        if (query.length < 3) {
-            resultsContainer.style.display = 'none';
-            return;
-        }
+      const query = this.value;
+      if (query.length < 3) {
+        resultsContainer.style.display = 'none';
+        return;
+      }
 
-        console.log('Query being sent to backend:', query); // Debugging line
-        console.log('Query length:', query.length); // Log the length of the query
-        const response = await fetch(`/api/autocomplete?query=${encodeURIComponent(query)}`);
-        const results = await response.json();
+      console.log('Query being sent to backend:', query); // Debugging line
+      console.log('Query length:', query.length); // Log the length of the query
+      const response = await fetch(`/api/autocomplete?query=${encodeURIComponent(query)}`);
+      const results = await response.json();
 
-        resultsContainer.innerHTML = '';
-        results.forEach(result => {
-            const item = document.createElement('a');
-            item.className = 'list-group-item list-group-item-action';
-            item.textContent = result.display_name;
-            item.onclick = () => {
-                addressInput.value = result.display_name; // Set the input value to the selected address
-                resultsContainer.style.display = 'none'; // Hide results
-            };
-            resultsContainer.appendChild(item);
-        });
+      resultsContainer.innerHTML = '';
+      results.forEach(result => {
+        const item = document.createElement('a');
+        item.className = 'list-group-item list-group-item-action';
+        item.textContent = result.display_name;
+        item.onclick = () => {
+          addressInput.value = result.display_name; // Set the input value to the selected address
+          resultsContainer.style.display = 'none'; // Hide results
+        };
+        resultsContainer.appendChild(item);
+      });
 
-        resultsContainer.style.display = results.length ? 'block' : 'none'; // Show or hide results
+      resultsContainer.style.display = results.length ? 'block' : 'none'; // Show or hide results
     });
   </script>
 </body>

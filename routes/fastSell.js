@@ -9,7 +9,6 @@ const dbConfig = require('../config/db');
 
 // POST route for fast sell form submission
 router.post('/fastSell',  async (req, res) => {
-    const dbConig = req.app.get('dbConfig');
     const formData = req.body;
     const referrer = req.get('Referer');
 
@@ -18,7 +17,6 @@ router.post('/fastSell',  async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
     try {
         // Sanitize input data
         const sanitizedFormData = {
@@ -39,7 +37,9 @@ router.post('/fastSell',  async (req, res) => {
             Timeframe: validator.escape(formData.Timeframe || ''),
             ContactPhone: validator.escape(formData.ContactPhone || ''),
             ContactEmail: validator.normalizeEmail(formData.ContactEmail || ''),
-            AdditionalComments: validator.escape(formData.AdditionalComments || ''),
+            AdditionalComments: Array.isArray(formData.AdditionalComments)
+            ? validator.escape(formData.AdditionalComments.join(', '))
+            : validator.escape(formData.AdditionalComments || ''),
             SubmitDate: new Date().toISOString(),
         };
 
@@ -120,7 +120,7 @@ router.post('/fastSell',  async (req, res) => {
         sendEmails();
 
         const successMessage = encodeURIComponent("Form submitted successfully!");
-        res.redirect(`${referrer}?success=true&message=${successMessage}`);
+        res.redirect(`${referrer}?success=${successMessage}`);
     } catch (err) {
         console.error(err);
         const errorMessage = encodeURIComponent("Error saving data to database");

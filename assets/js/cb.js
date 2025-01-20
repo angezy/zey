@@ -1,16 +1,4 @@
-var blendAmount = 70;
-var delay = -10;
-var windowWidth = window.innerWidth;
-var bg = document.getElementById("bg");
 
-document.onmousemove = function (e) {
-  mouseX = Math.round(e.pageX / windowWidth * 100 - delay);
-
-  col1 = mouseX - blendAmount;
-  col2 = mouseX + blendAmount;
-
-  bg.style.background = "linear-gradient(to right,rgb(54, 15, 95) " + col1 + "%,rgb(48, 78, 129) " + col2 + "%)";
-}
 
 function navigateSection(currentSectionId, targetSectionId) {
   const $currentSection = $(`#section-${currentSectionId}`);
@@ -168,7 +156,7 @@ function handlePageLoad() {
 
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "/Nick-Cash-Buyer"; // Redirect to blogs on confirmation
+        window.location.href = "/Cash-Buyer"; // Redirect to blogs on confirmation
       }
     });
   }

@@ -2,14 +2,13 @@ const express = require('express');
 const sql = require('mssql');
 const { body, validationResult } = require('express-validator');
 const validator = require('validator');
-const validateAndSanitize = require('../middleware/validateAndSanitize');
+const listingauth = require('../middleware/authlisting');
 const router = express.Router();
 require('dotenv').config();
 const dbConfig = require('../config/db');
 
 // POST route for listing form submission
-router.post('/listingForm', validateAndSanitize, async (req, res) => {
-    const dbConig = req.app.get('dbConfig');
+router.post('/listing', listingauth, async (req, res) => {
     const formData = req.body;
     const referrer = req.get('Referer');
 
@@ -96,7 +95,7 @@ router.post('/listingForm', validateAndSanitize, async (req, res) => {
         await sendEmails();
 
         const successMessage = encodeURIComponent("Listing submitted successfully!");
-        res.redirect(`${referrer}?success=true&message=${successMessage}`);
+        res.redirect(`${referrer}?success=${successMessage}`);
     } catch (err) {
         console.error(err);
         const errorMessage = encodeURIComponent("Error saving listing data");

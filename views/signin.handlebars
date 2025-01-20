@@ -107,7 +107,13 @@
 
         // Client-side input validation
         if (!Email || !Password) {
-          alert('Please fill in both Email and Password fields.');
+          Swal.fire({
+            icon: 'warning',
+            title: 'Input Error',
+            text: 'Please fill in both Email and Password fields.',
+          });
+          bon();
+          soff();
           return;
         }
         // Send AJAX request
@@ -126,6 +132,8 @@
             window.location.href = '/dashboard';
           },
           error: function (xhr) {
+            bon();
+            soff();
             console.error('XHR Error:', xhr); // Log the entire XHR object for debugging
 
             let errorMessage = 'An unexpected error occurred'; // Default fallback
@@ -143,9 +151,12 @@
               errorMessage = xhr.statusText; // Use status text as fallback
             }
 
-            alert(errorMessage); // Display the error message
-            bon();
-            soff();
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: errorMessage,
+            });
+
           }
 
         });
