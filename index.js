@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const authMiddleware = require('./middleware/authMiddleware');
 const cbform = require('./routes/cashbuyer-route');
 const fastSell = require('./routes/fastSell');
+const contacts = require('./routes/contacts');
 const listing = require('./routes/listing');
 const blogsRoutes = require('./routes/blogsRoutes');
 const contactusRoute = require('./routes/contactus-route'); // New route for contact form
@@ -51,6 +52,8 @@ app.use('/api', kanbanRoutes);
 app.use('/api', listing);
 app.use('/api', contactusRoute);
 app.use('/api', blogsRoutes);
+app.use('/api', contacts);
+
 
 // Register a custom helper to format the date
 Handlebars.registerHelper('formatDate', function (date) {
@@ -74,7 +77,9 @@ const fetchBlogPost = async (postId) => {
   } catch (err) {
     console.error('Database query error:', err);
     throw err;
-  }
+  } finally {
+    sql.close();
+}
 };
 async function fetchBlogPosts() {
   try {
@@ -85,7 +90,9 @@ async function fetchBlogPosts() {
   } catch (err) {
     console.error('Error fetching blog posts:', err);
     throw new Error('Error fetching blog posts');
-  }
+  } finally {
+    sql.close();
+}
 }
 
 // Terms of Service/Privacy Policy 
@@ -106,6 +113,9 @@ app.get('/fastSell', (req, res) => {
 app.get('/listing', (req, res) => {
   res.render('listing', { title: ` Fast Sell Property `, layout: false });
 });
+app.get('/contacts', (req, res )=>{
+res.render('contacts', { title: ` Contact Nick House Buyer `, layout: false });
+});
 
 // public routes
 app.get('/', async (req, res) => {
@@ -115,6 +125,8 @@ app.get('/', async (req, res) => {
     res.render('index', { title: `Nick House Buyer`, blogs: recentPosts })
 } catch (err) {
     res.status(500).send(err.message);
+} finally {
+  sql.close();
 }
 });
 app.get('/faq', (req, res) => {
@@ -126,7 +138,9 @@ app.get('/Blogs', async (req, res) => {
     res.render('blogs', { layout: 'main', title: 'All Blog Posts', blogs: blogPosts });
   } catch (err) {
     res.status(500).send(err.message);
-  }
+  } finally {
+    sql.close();
+}
 });
 app.get('/blog/:id', async (req, res) => {
   const postId = req.params.id;
@@ -138,7 +152,9 @@ app.get('/blog/:id', async (req, res) => {
       res.render('blog', { layout: false , title: post.Title, postt: post });
     } catch (err) {
       res.status(500).send('Error retrieving blog post');
-  }
+  } finally {
+    sql.close();
+}
 });
 app.get('/signin', (req, res) => {
   const error = req.query.error;
@@ -174,7 +190,9 @@ app.get('/dashboard/cashBuyers', authMiddleware, async (req, res) => {
   } catch (err) {
     console.error('Error fetching CashBuyers:', err);
     res.status(500).send('Error fetching CashBuyers');
-  }
+  } finally {
+    sql.close();
+}
 });
 app.get('/dashboard/fastSeller', authMiddleware, async (req, res) => {
   try {
@@ -186,7 +204,9 @@ app.get('/dashboard/fastSeller', authMiddleware, async (req, res) => {
   } catch (err) {
     console.error('Error fetching fastSeller:', err);
     res.status(500).send('Error fetching fastSeller');
-  }
+  } finally {
+    sql.close();
+}
 });
 app.get('/dashboard/lister', authMiddleware, async (req, res) => {
   try {
@@ -198,7 +218,9 @@ app.get('/dashboard/lister', authMiddleware, async (req, res) => {
   } catch (err) {
     console.error('Error fetching lister:', err);
     res.status(500).send('Error fetching lister');
-  }
+  } finally {
+    sql.close();
+}
 });
 app.get('/dashboard/blogEditor', authMiddleware, async (req, res) => {
   try {
@@ -210,7 +232,9 @@ app.get('/dashboard/blogEditor', authMiddleware, async (req, res) => {
   } catch (err) {
     console.error('Error fetching blog posts:', err);
     res.status(500).send('Error fetching blog posts');
-  }
+  } finally {
+    sql.close();
+}
 });
 app.get('/dashboard/kanban', authMiddleware, async (req, res) => {
   try {
@@ -221,8 +245,23 @@ app.get('/dashboard/kanban', authMiddleware, async (req, res) => {
 } catch (err) {
     console.error('Error fetching entries:', err);
     res.status(500).send('Error fetching entries');
+} finally {
+  sql.close();
 }
 });
+app.get('/dashboard/contacts', authMiddleware, async (req, res)=>{
+  try {
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request().query('SELECT * FROM dbo.contacts_tbl');
+    const contacts = result.recordset;
+    res.render('dashboard/contacts', { title: `Contacts`, layout:'__dashboard',  contacts:contacts });
+} catch (err) {
+    console.error("Database Error:", err);
+    res.status(500).send("Error retrieving contacts from database");
+} finally {
+    sql.close();
+}
+})
 
 
 // Global error handler
