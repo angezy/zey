@@ -262,3 +262,26 @@ function debounce(func, wait, immediate) {
     if (immediate && !timeout) func.apply(context, args);
   };
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+        const revealSections = document.querySelectorAll('.scroll-reveal');
+
+        function handleScroll() {
+            revealSections.forEach((section) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const sectionBottom = section.getBoundingClientRect().bottom;
+                const triggerPoint = window.innerHeight * 0.8; // Adjust trigger point
+
+                // Show section when scrolled down
+                if (sectionTop < triggerPoint && sectionBottom > 0) {
+                    section.classList.add('visible');
+                } else {
+                    // Hide section when scrolled back up or out of view
+                    section.classList.remove('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Run on page load to check the initial visibility
+    });

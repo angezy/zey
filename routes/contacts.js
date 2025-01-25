@@ -16,7 +16,7 @@ router.post(
       body('Email').optional().isEmail().withMessage('Invalid email address').normalizeEmail(),
       body('PhoneNumber').optional().isString().withMessage('PhoneNumber must be a string').trim().escape(),
       body('Role').isString().withMessage('Role is required').trim().escape(),
-      body('specificRole').optional().isString().trim().escape(),
+      body('SpecificRole').optional().isString().trim().escape(),
     ],
     async (req, res) => {
       const formData = req.body;
@@ -32,12 +32,12 @@ router.post(
   
         // Sanitize input data
         const sanitizedData = {
-          FacebookName: validator.escape(formData.FacebookName || ""),
-          ChatResult: validator.escape(formData.chatResult || ""),
+          FacebookName: validator.escape(formData.FacebookName),
+          ChatResult: validator.escape(formData.chatResult),
           Email: validator.isEmail(formData.Email || "") ? validator.normalizeEmail(formData.Email) : "",
-          PhoneNumber: validator.escape(formData.PhoneNumber || ""),
-          Role: validator.escape(formData.Role || ""),
-          SpecificRole: formData.role === "Other" ? validator.escape(formData.specificRole || "") : "",
+          PhoneNumber: validator.escape(formData.PhoneNumber),
+          Role: validator.escape(formData.Role),
+          SpecificRole: validator.escape(formData.SpecificRole),
         };
   
         // Connect to MSSQL and insert data

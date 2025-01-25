@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fast Sell Your Florida House</title>
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <title>Fast Sell Your Florida House</title>
   <meta name="description"
     content="Register as a cash buyer with Nick's Real Estate Services to access high-quality investment properties. Tailor your buying criteria and discover profitable real estate deals today.">
   <meta name="keywords"
@@ -34,7 +36,7 @@
               <form id="Preview-form" action="/api/fastSell" method="POST" class="text-center" novalidate>
                 <!-- Section 1: Basic Information -->
                 <div id="section-1" class="form-section">
-                  <h4 class="text-dark">Seller Information</h4>
+                  <h4 class="text-white">Seller Information</h4>
                   <br><br>
                   <div class="row mb-4">
                     <div class="col">
@@ -73,7 +75,7 @@
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
                         <input name="PropertyAddress" type="text" id="propertyAddress" placeholder="123 Main St"
-                          class="text-secondary form-control" required autocomplete="off" />
+                          class="text-dark form-control" required autocomplete="off" />
                         <label class="form-label" for="propertyAddress">Property Address</label>
                       </div>
                       <div id="autocomplete-results" class="list-group" style="display: none;"></div>
@@ -84,13 +86,13 @@
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
                         <input name="SquareFootage" type="number" id="squareFootage" placeholder="1500"
-                          class="text-secondary form-control" required />
+                          class="text-dark form-control" required />
                         <label class="form-label" for="squareFootage">Square Footage</label>
                       </div>
                     </div>
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
-                        <input name="LotSize" type="number" id="lotSize" class="text-secondary form-control" required />
+                        <input name="LotSize" type="number" id="lotSize" class="text-dark form-control" required />
                         <label class="form-label" for="lotSize">Lot Size</label>
                       </div>
                     </div>
@@ -99,16 +101,16 @@
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
                         <input name="Bedrooms" type="number" id="bedrooms" placeholder="3"
-                          class="text-secondary form-control" required />
-                        <label class="form-label" for="bedrooms">Number of Bedrooms</label>
+                          class="text-dark form-control" required />
+                        <label class="form-label" for="bedrooms"><small>Number of Bedrooms</small></label>
                       </div>
                     </div>
 
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
                         <input name="Bathrooms" type="number" id="bathrooms" placeholder="2"
-                          class="text-secondary form-control" required />
-                        <label class="form-label" for="bathrooms">Number of Bathrooms</label>
+                          class="text-dark form-control" required />
+                        <label class="form-label" for="bathrooms"><small>Number of Bathrooms</small></label>
                       </div>
                     </div>
                   </div>
@@ -116,6 +118,14 @@
                   <div class="row mb-4">
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
+                        <input name="YearBuilt" type="number" id="yearBuilt" class="text-dark rounded form-control" required />
+                        <label class="form-label" for="yearBuilt">Year Built</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div  class="form-outline">
                         <select name="PropertyType" id="propertyType" class="text-dark form-control" required>
                           <option value=""> </option>
                           <option value="Single Family Home">Single Family Home</option>
@@ -131,27 +141,20 @@
                       </div>
                     </div>
                   </div>
+
                   <div class="row mb-4">
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
-                        <input name="YearBuilt" type="number" id="yearBuilt" class="text-secondary form-control"
+                        <input name="ReasonForSelling" type="text" id="reasonForSelling" class="text-dark form-control"
                           required />
-                        <label class="form-label" for="yearBuilt">Year Built</label>
+                        <label class="form-label" for="reasonForSelling">Reason for Selling</label>
                       </div>
                     </div>
                   </div>
                   <div class="row mb-4">
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
-                        <input name="ReasonForSelling" type="text" id="reasonForSelling"
-                          class="text-secondary form-control" required />
-                        <label class="form-label" for="reasonForSelling">Reason for Selling</label>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div data-mdb-input-init class="form-outline">
-                        <input name="Timeframe" type="text" id="timeframe" class="text-secondary form-control"
-                          required />
+                        <input name="Timeframe" type="text" id="timeframe" class="text-dark form-control" required />
                         <label class="form-label" for="timeframe">Timeframe</label>
                       </div>
                     </div>
@@ -166,7 +169,7 @@
                   <h4>Property Condition</h4>
                   <div class="row mb-4">
                     <div class="col">
-                      <label>What is the current condition of the property?</label>
+                      <label class="text-dark form-label">What is the current condition of the property?</label>
                       <br>
                       <div class="form-check form-check-inline">
                         <input name="PropertyCondition" class="form-check-input" type="radio" value="Excellent"
@@ -191,8 +194,7 @@
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
                         <textarea name="AdditionalComments" id="additionalComments"
-                          placeholder="Please describe the property" class="text-secondary form-control"
-                          rows="3"></textarea>
+                          placeholder="Please describe the property" class="text-dark form-control" rows="3"></textarea>
                         <label class="form-label" for="additionalComments">Property Description</label>
                       </div>
                     </div>
@@ -210,7 +212,7 @@
                     <div class="col">
                       <div data-mdb-input-init class="form-outline">
                         <input name="AskingPrice" type="number" id="askingPrice" placeholder="500000"
-                          class="text-secondary form-control" required />
+                          class="text-dark form-control" required />
                         <label class="form-label" for="askingPrice">Asking Price</label>
                       </div>
                     </div>
@@ -220,7 +222,7 @@
                       <div data-mdb-input-init class="form-outline">
                         <textarea name="AdditionalComments" id="additionalComments"
                           placeholder="Please provide any additional comments or questions"
-                          class="text-secondary form-control" rows="4"></textarea>
+                          class="text-dark form-control" rows="4"></textarea>
                         <label class="form-label" for="additionalComments">Additional Comments or Questions</label>
                       </div>
                     </div>

@@ -29168,6 +29168,19 @@ pre[class*=language-] {
   text-align:center;
 }
 
-/*# sourceMappingURL=kit-free.css.map */
 
 
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(50px); 
+  transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+  visibility: hidden; 
+  transition-delay: 0.08s; 
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible; 
+}
