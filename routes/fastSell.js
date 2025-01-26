@@ -8,9 +8,10 @@ require('dotenv').config();
 const dbConfig = require('../config/db');
 
 // POST route for fast sell form submission
-router.post('/fastSell',  async (req, res) => {
+router.post('/fastSell', async (req, res) => {
     const formData = req.body;
     const referrer = req.get('Referer');
+    const userIP = req.ip;
 
     // Validate the incoming data
     const errors = validationResult(req);
@@ -38,9 +39,11 @@ router.post('/fastSell',  async (req, res) => {
             ContactPhone: validator.escape(formData.ContactPhone || ''),
             ContactEmail: validator.normalizeEmail(formData.ContactEmail || ''),
             AdditionalComments: Array.isArray(formData.AdditionalComments)
-            ? validator.escape(formData.AdditionalComments.join(', '))
-            : validator.escape(formData.AdditionalComments || ''),
+                ? validator.escape(formData.AdditionalComments.join(', '))
+                : validator.escape(formData.AdditionalComments || ''),
             SubmitDate: new Date().toISOString(),
+            SellerIP: userIP 
+
         };
 
         // Connect to MSSQL
@@ -52,12 +55,12 @@ router.post('/fastSell',  async (req, res) => {
                 FullName, PropertyAddress, City, State, ZipCode, PropertyType,
                 Bedrooms, Bathrooms, SquareFootage, LotSize, YearBuilt,
                 PropertyCondition, AskingPrice, ReasonForSelling, Timeframe,
-                ContactPhone, ContactEmail, AdditionalComments, SubmitDate
+                ContactPhone, ContactEmail, AdditionalComments, SubmitDate, SellerIP
             ) VALUES (
                 @FullName, @PropertyAddress, @City, @State, @ZipCode, @PropertyType,
                 @Bedrooms, @Bathrooms, @SquareFootage, @LotSize, @YearBuilt,
                 @PropertyCondition, @AskingPrice, @ReasonForSelling, @Timeframe,
-                @ContactPhone, @ContactEmail, @AdditionalComments, @SubmitDate
+                @ContactPhone, @ContactEmail, @AdditionalComments, @SubmitDate, @SellerIP
             )
         `;
 
@@ -81,6 +84,7 @@ router.post('/fastSell',  async (req, res) => {
             .input('ContactEmail', sql.NVarChar, sanitizedFormData.ContactEmail)
             .input('AdditionalComments', sql.NVarChar, sanitizedFormData.AdditionalComments)
             .input('SubmitDate', sql.DateTime, sanitizedFormData.SubmitDate)
+            .input('SellerIP', sql.VarChar, sanitizedData.SellerIP)
             .query(query);
 
         const { sendEmail, sendEmailWithTemplate } = require('../models/mailer');

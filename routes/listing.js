@@ -11,6 +11,7 @@ const dbConfig = require('../config/db');
 router.post('/listing', listingauth, async (req, res) => {
     const formData = req.body;
     const referrer = req.get('Referer');
+    const userIP = req.ip;
 
     // Validate the incoming data
     const errors = validationResult(req);
@@ -32,7 +33,8 @@ router.post('/listing', listingauth, async (req, res) => {
             AskingPrice: validator.isFloat(formData.AskingPrice || '') ? formData.AskingPrice : null,
             Description: validator.escape(formData.Description || ''),
             ReasonForSelling: validator.escape(formData.ReasonForSelling || ''),
-            SubmitDate: new Date().toISOString()
+            SubmitDate: new Date().toISOString(),
+            ListerIP: userIP
         };
 
         // Connect to MSSQL
@@ -43,11 +45,11 @@ router.post('/listing', listingauth, async (req, res) => {
             INSERT INTO dbo.listings_tbl (
                 FullName, Email, Phone, PropertyAddress, PropertyType,
                 Bedrooms, Bathrooms, SquareFootage, AskingPrice,
-                Description, ReasonForSelling, SubmitDate
+                Description, ReasonForSelling, SubmitDate, ListerIP
             ) VALUES (
                 @FullName, @Email, @Phone, @PropertyAddress, @PropertyType,
                 @Bedrooms, @Bathrooms, @SquareFootage, @AskingPrice,
-                @Description, @ReasonForSelling, @SubmitDate
+                @Description, @ReasonForSelling, @SubmitDate, @ListerIP
             )
         `;
 
@@ -63,7 +65,9 @@ router.post('/listing', listingauth, async (req, res) => {
             .input('AskingPrice', sql.Money, sanitizedFormData.AskingPrice)
             .input('Description', sql.NVarChar, sanitizedFormData.Description)
             .input('ReasonForSelling', sql.NVarChar, sanitizedFormData.ReasonForSelling)
-            .input('SubmitDate', sql.DateTime, sanitizedFormData.SubmitDate)
+            .input('SubmitDate', sql.DateTime, sanitizedFormData.SubmitDate).input('SellerIP', sql.VarChar, sanitizedData.SellerIP)
+            .input('ListerIP', sql.VarChar, sanitizedData.ListerIP)
+
             .query(query);
 
         const { sendEmail, sendEmailWithTemplate } = require('../models/mailer');

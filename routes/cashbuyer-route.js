@@ -10,9 +10,9 @@ const dbConfig = require('../config/db');
 
 // POST route for form submission
 router.post('/cbForm', validateAndSanitize, async (req, res) => {
-    const dbConig = req.app.get('dbConfig'); // Access DB config from app settings
     const formData = req.body;
     const referrer = req.get('Referer');
+    const userIP = req.ip;
 
     // Validate the incoming data
     const errors = validationResult(req);
@@ -54,6 +54,7 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
             PurchaseReadiness: validator.isInt(formData.PurchaseReadiness || '') ? formData.PurchaseReadiness : null,
             AdditionalComments: validator.escape(formData.AdditionalComments || ''),
             SubmitDate: new Date().toISOString(),
+            CashBuyerIP: userIP
         };
 
         // Connect to MSSQL
@@ -66,13 +67,13 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
                 CompletedProjects, CurrentProjects, PropertiesNext6Months, PropertiesPerYear, SourceFinancing, FundingInPlace,
                 ProofOfFunds, ProofOfFundsFile, TripleDeals, Quickly, PriceRanges, MinimumProfit, GoodDealCriteria,
                 PreferredAreas, AvoidedAreas, PropertyType, WorkType, MaxPropertyAge, Mins, IdealProperty,
-                InvestmentStrategy, PurchaseReadiness, AdditionalComments, SubmitDate
+                InvestmentStrategy, PurchaseReadiness, AdditionalComments, SubmitDate, CashBuyerIP
             ) VALUES (
                 @FullName, @CompanyName, @Website, @CellPhone, @Email, @Address, @YearsInBusiness,
                 @CompletedProjects, @CurrentProjects, @PropertiesNext6Months, @PropertiesPerYear, @SourceFinancing, @FundingInPlace,
                 @ProofOfFunds, @ProofOfFundsFile, @TripleDeals, @Quickly, @PriceRanges, @MinimumProfit, @GoodDealCriteria,
                 @PreferredAreas, @AvoidedAreas, @PropertyType, @WorkType, @MaxPropertyAge, @Mins, @IdealProperty,
-                @InvestmentStrategy, @PurchaseReadiness, @AdditionalComments, @SubmitDate
+                @InvestmentStrategy, @PurchaseReadiness, @AdditionalComments, @SubmitDate, @CashBuyerIP
             )
         `;
 
@@ -108,6 +109,7 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
             .input('PurchaseReadiness', sql.Int, sanitizedFormData.PurchaseReadiness)
             .input('AdditionalComments', sql.NVarChar, sanitizedFormData.AdditionalComments)
             .input('SubmitDate', sql.DateTime, sanitizedFormData.SubmitDate)
+            .input('CashBuyerIP', sql.NVarChar, sanitizedData.CashBuyerIP)
             .query(query);
 
 

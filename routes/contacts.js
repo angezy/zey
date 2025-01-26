@@ -21,6 +21,7 @@ router.post(
     async (req, res) => {
       const formData = req.body;
       const referrer = req.get('Referer');
+      const userIP = req.ip;
   
       try {
         // Check for validation errors
@@ -38,13 +39,14 @@ router.post(
           PhoneNumber: validator.escape(formData.PhoneNumber),
           Role: validator.escape(formData.Role),
           SpecificRole: validator.escape(formData.SpecificRole),
+          ContactIP: userIP 
         };
   
         // Connect to MSSQL and insert data
         const pool = await sql.connect(dbConfig);
         const query = `
-          INSERT INTO dbo.contacts_tbl (FacebookName, ChatResult, Email, PhoneNumber, Role, SpecificRole)
-          VALUES (@FacebookName, @ChatResult, @Email, @PhoneNumber, @Role, @SpecificRole)
+          INSERT INTO dbo.contacts_tbl (FacebookName, ChatResult, Email, PhoneNumber, Role, SpecificRole, ContactIP)
+          VALUES (@FacebookName, @ChatResult, @Email, @PhoneNumber, @Role, @SpecificRole, @ContactIP)
         `;
         await pool.request()
           .input('FacebookName', sql.NVarChar, sanitizedData.FacebookName)
@@ -53,6 +55,7 @@ router.post(
           .input('PhoneNumber', sql.NVarChar, sanitizedData.PhoneNumber)
           .input('Role', sql.NVarChar, sanitizedData.Role)
           .input('SpecificRole', sql.NVarChar, sanitizedData.SpecificRole)
+          .input('ContactIP', sql.VarChar, sanitizedData.ContactIP) 
           .query(query);
   
         const successMessage = encodeURIComponent("Form submitted successfully!");
