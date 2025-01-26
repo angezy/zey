@@ -12,7 +12,7 @@ const dbConfig = require('../config/db');
 router.post('/cbForm', validateAndSanitize, async (req, res) => {
     const formData = req.body;
     const referrer = req.get('Referer');
-    const userIP = req.ip;
+    const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     // Validate the incoming data
     const errors = validationResult(req);

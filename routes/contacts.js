@@ -21,8 +21,7 @@ router.post(
     async (req, res) => {
       const formData = req.body;
       const referrer = req.get('Referer');
-      const userIP = req.ip;
-  
+      const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       try {
         // Check for validation errors
         const errors = validationResult(req);
