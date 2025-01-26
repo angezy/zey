@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const roleRadios = document.querySelectorAll('input[name="Role"]');
   roleRadios.forEach(radio => {
       radio.addEventListener('change', function () {
-          if (this.value !== 'Other') {
+          if (this.value !== 'specific Role:') {
               otherRoleInputContainer.style.display = 'none';
           }
       });

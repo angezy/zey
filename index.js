@@ -104,16 +104,16 @@ app.get('/terms-of-service', (req, res) => {
 });
 
 // Forms routes
-app.get('/Cash-Buyer', (req, res) => {
+app.get('/forms/Cash-Buyer', (req, res) => {
   res.render('cashbuyers', { title: ` Nick's Cash Buyers Form `, layout: false });
 });
-app.get('/fastSell', (req, res) => {
+app.get('/forms/fastSell', (req, res) => {
   res.render('fastSell', { title: ` Fast Sell House `, layout: false });
 });
-app.get('/listing', (req, res) => {
+app.get('/forms/listing', (req, res) => {
   res.render('listing', { title: ` Fast Sell Property `, layout: false });
 });
-app.get('/contacts', (req, res )=>{
+app.get('/forms/contacts', (req, res )=>{
 res.render('contacts', { title: ` Contact Nick House Buyer `, layout: false });
 });
 

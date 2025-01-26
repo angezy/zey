@@ -58,6 +58,7 @@
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Edit Blog Modal -->
 <div class="modal modal-xl fade" id="editBlogModal" style="z-index:9999" tabindex="-1"
@@ -87,13 +88,6 @@
           <div class="mb-3">
             <label for="editContents" class="form-label">Content</label>
             <textarea id="editContents" name="contents"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="editEn" class="form-label">English</label>
-            <select class="form-control" id="editEn" name="En" required>
-              <option name="En" value="True">بله</option>
-              <option name="En" value="False">خیر</option>
-            </select>
           </div>
         </div>
         <div class="modal-footer">
@@ -126,9 +120,6 @@
     </div>
   </div>
 </div>
-
-<!-- Include SweetAlert library -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Add Blog Modal -->
 <div class="modal modal-xl fade" id="addBlogModal" style="z-index:99999" tabindex="-1"

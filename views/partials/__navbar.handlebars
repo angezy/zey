@@ -59,7 +59,7 @@
         <li class="nav-item my-auto ms-3 ms-lg-0"> 
           
           
-          <a href="/fastSell" class="btn btn-danger  mb-0 mt-2 mt-md-0"
+          <a href="/forms/fastSell" class="btn btn-danger  mb-0 mt-2 mt-md-0"
           ><i class="material-symbols-rounded opacity-6 me-2 text-md">payments</i>Cash Offer</a>
           
         </li>
@@ -70,8 +70,6 @@
   </div>
 </nav>
 <!-- End Navbar -->
-</div></div>
-
 <script>
   // Get the navbar toggle button and the navigation menu
   const navbarToggler = document.querySelector('.navbar-toggler');
@@ -79,10 +77,10 @@
 
   // Listen for the scroll event
   window.addEventListener('scroll', function () {
-    // Check if the navbar is collapsed
+    // Check if the navbar is collapsed and user is not in the header section
     if (navbarCollapse.classList.contains('show')) {
       // Remove the 'show' class to close the hamburger menu
-      navbarToggler.click();
+      navbarCollapse.classList.remove('show');
     }
   });
 </script>
