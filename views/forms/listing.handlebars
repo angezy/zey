@@ -31,60 +31,105 @@
           <div class=" border  shadow-0 mb-3 glass-card" style="width: 100%;">
             <div class="card-body rounded-4 text-light px-5 pt-4 pb-2">
               <h2 class="text-center">Submit Your Property Listing</h2>
-              <form action="/api/listing" method="POST" class="text-center" novalidate>
+              <form id="listingForm" class="text-center" action="/api/listing" method="POST" enctype="multipart/form-data">
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="FullName" type="text" class="form-control" required />
-                  <label class="form-label">Full Name</label>
+                  <input id="Title" name="Title" type="text" class="form-control" required />
+                  <label class="form-label" for="Title">Title</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="Email" type="email" class="form-control" required />
-                  <label class="form-label">Email</label>
+                  <input id="FullName" name="FullName" type="text" class="form-control" required />
+                  <label class="form-label" for="FullName">Full Name</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="Phone" type="tel" class="form-control" required />
-                  <label class="form-label">Phone Number</label>
+                  <input id="Email" name="Email" type="email" class="form-control" required />
+                  <label class="form-label" for="Email">Email</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="PropertyAddress" type="text" class="form-control" required />
-                  <label class="form-label">Property Address</label>
-                </div>
-<div data-mdb-input-init class="form-outline">
-  <select name="PropertyType" id="propertyType" class="text-dark form-control" required>
-    <option value=""> </option>
-    <option value="Single Family Home">Single Family Home</option>
-    <option value="Multi Family">Multi Family</option>
-    <option value="Condo">Condo</option>
-    <option value="Townhouse">Townhouse</option>
-    <option value="Apartment">Apartment</option>
-    <option value="Triplex">Triplex</option>
-    <option value="Fourplex">Fourplex</option>
-    <option value="Other">Other</option>
-  </select>
-  <label class="form-label" for="propertyType">Property Type</label>
-</div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="Bedrooms" type="number" class="form-control" required />
-                  <label class="form-label">Number of Bedrooms</label>
+                  <input id="Phone" name="Phone" type="tel" class="form-control" required />
+                  <label class="form-label" for="Phone">Phone Number</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="Bathrooms" type="number" class="form-control" required />
-                  <label class="form-label">Number of Bathrooms</label>
+                  <input id="PropertyAddress" name="PropertyAddress" type="text" class="form-control" required />
+                  <label class="form-label" for="PropertyAddress">Property Address</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="SquareFootage" type="number" class="form-control" required />
-                  <label class="form-label">Square Footage</label>
+                  <select id="PropertyType" name="PropertyType" class="text-dark form-control" required>
+                    <option value="">Select Property Type</option>
+                    <option value="Single Family Home">Single Family Home</option>
+                    <option value="Multi Family">Multi Family</option>
+                    <option value="Condo">Condo</option>
+                    <option value="Townhouse">Townhouse</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="Triplex">Triplex</option>
+                    <option value="Fourplex">Fourplex</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <label class="form-label" for="PropertyType">Property Type</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="AskingPrice" type="number" class="form-control" required />
-                  <label class="form-label">Asking Price</label>
+                  <input id="Bedrooms" name="Bedrooms" type="number" class="form-control" required />
+                  <label class="form-label" for="Bedrooms">Number of Bedrooms</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <textarea name="Description" class="form-control" rows="3" required></textarea>
-                  <label class="form-label">Description</label>
+                  <input id="Bathrooms" name="Bathrooms" type="number" class="form-control" required />
+                  <label class="form-label" for="Bathrooms">Number of Bathrooms</label>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="AskingPrice" name="AskingPrice" type="number" class="form-control" required />
+                  <label class="form-label" for="AskingPrice">Asking Price</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="ReasonForSelling" type="text" class="form-control" required />
-                  <label class="form-label">Reason for Selling</label>
+                  <textarea id="Description" name="Description" class="form-control" rows="3" required></textarea>
+                  <label class="form-label" for="Description">Description</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="ReasonForSelling" name="ReasonForSelling" type="text" class="form-control" required />
+                  <label class="form-label" for="ReasonForSelling">Reason for Selling</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="PhotoFile" name="PhotoFile" type="file" class="form-control" accept="image/*" required />
+                  <label class="form-label" for="PhotoFile">Upload Photo</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="PhotoURL" name="PhotoURL" type="url" class="form-control" />
+                  <label class="form-label" for="PhotoURL">Photo URL</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="LotArea" name="LotArea" type="number" class="form-control"  />
+                  <label class="form-label" for="LotArea">Lot Area (SQ FT)</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="FloorArea" name="FloorArea" type="number" class="form-control" required />
+                  <label class="form-label" for="FloorArea">Floor Area (SQ FT)</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="YearBuilt" name="YearBuilt" type="number" class="form-control" required />
+                  <label class="form-label" for="YearBuilt">Year Built</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="Garage" name="Garage" type="number" class="form-control" required />
+                  <label class="form-label" for="Garage">Garage</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="Stories" name="Stories" type="number" class="form-control"  />
+                  <label class="form-label" for="Stories">Stories</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="Roofing" name="Roofing" type="text" class="form-control"  />
+                  <label class="form-label" for="Roofing">Roofing</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="Comps1" name="Comps1" type="text" class="form-control" />
+                  <label class="form-label" for="Comps1">Comps1</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="Comps2" name="Comps2" type="text" class="form-control" />
+                  <label class="form-label" for="Comps2">Comps2</label>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input id="Comps3" name="Comps3" type="text" class="form-control" />
+                  <label class="form-label" for="Comps3">Comps3</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit Listing</button>
               </form>
@@ -95,17 +140,37 @@
     </div>
   </section>
 
-
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <!-- MDB -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.1.0/mdb.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!--   Core JS Files   -->
+  <!-- Core JS Files -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="/assets/js/listing.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('listingForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+
+      try {
+        const response = await fetch('/api/listing', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          window.location.href = `${window.location.href.split('?')[0]}?success=${encodeURIComponent(result.message)}`;
+        } else {
+          window.location.href = `${window.location.href.split('?')[0]}?errors=${encodeURIComponent(result.message)}`;
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        window.location.href = `${window.location.href.split('?')[0]}?errors=${encodeURIComponent('Error submitting form')}`;
+      }
+    });
+  </script>
 </body>
 
 </html>

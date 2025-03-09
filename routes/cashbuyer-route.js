@@ -109,23 +109,15 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
             .input('PurchaseReadiness', sql.Int, sanitizedFormData.PurchaseReadiness)
             .input('AdditionalComments', sql.NVarChar, sanitizedFormData.AdditionalComments)
             .input('SubmitDate', sql.DateTime, sanitizedFormData.SubmitDate)
-            .input('CashBuyerIP', sql.NVarChar, sanitizedData.CashBuyerIP)
+            .input('CashBuyerIP', sql.NVarChar, sanitizedFormData.CashBuyerIP)
             .query(query);
 
 
         const { sendEmail, sendEmailWithTemplate } = require('../models/mailer');
-
-
-        console.log('Incoming req.body:', req.body);
-        console.log('Sanitized Form Data:', sanitizedFormData);
-        console.log('Admin Email:', process.env.RECIPIENT_EMAIL1);
-        console.log('Client Email:', sanitizedFormData.Email);
-
-
+        
         const sendEmails = async () => {
-            console.log('Client Email:', sanitizedFormData);
 
-
+            
             // Send email to admin
             try {
                 const adminRecipients = [{ email: process.env.RECIPIENT_EMAIL1, name: 'Admin' }];
@@ -165,7 +157,7 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
     } catch (err) {
         console.error(err);
         const errorMessage = encodeURIComponent("Error saving data to database");
-        res.redirect(`${referrer}?error=${errorMessage}`);
+        res.redirect(`${referrer}?errors=${errorMessage}`);
     } finally {
         sql.close();
     }

@@ -1,2 +1,8 @@
 ALTER TABLE dbo.listings_tbl
-ADD ListerIP VARCHAR(50);
+ADD 
+    LotArea INT,
+    FloorArea INT,
+    YearBuilt INT,
+    Garage INT,
+    Stories INT,
+    Roofing NVARCHAR(255);

@@ -5,7 +5,6 @@
   {{> __dsidenav}}
   <main class="main-content position-relative border-radius-lg ">
     {{> __dashnavbar}}
-
     <div class="row">
       {{#each listings}}
       <div class="col-md-4 p-2">
@@ -47,44 +46,121 @@
               <h5>{{this.PropertyAddress}}</h5>
               <div class="row">
                 <div class="col">
-                  <div class="d-flex justify-content-center">
-                    <div class="d-grid text-center">
-                      <span class="text-sm opacity-8">Type</span>
-                      <span class="text-lg font-weight-bolder">{{this.PropertyType}}</span>
-                    </div>
-                    <div class="d-grid text-center mx-4">
-                      <span class="text-sm opacity-8">Year Built</span>
-                      <span class="text-lg font-weight-bolder">{{this.YearBuilt}}</span>
-                    </div>
-                    <div class="d-grid text-center">
-                      <span class="text-sm opacity-8">Condition</span>
-                      <span class="text-lg font-weight-bolder">{{this.PropertyCondition}}</span>
-                    </div>
-                  </div>
+                  <a href="javascript:;" data-id="{{this.listingId}}" class="listing-detail btn btn-sm btn-primary">
+                    Detail <i class="ni ni-collection"></i>
+                  </a>
+                  <a href="https://ipinfo.io/{{this.ListerIP}}" target="_blank">
+                    Lister IP Location <i class="ni education_hat mr-2"></i>
+                  </a>
                 </div>
               </div>
-              <div>
-                <i class="ni education_hat mr-2"></i>{{this.AdditionalComments}}
+              <!-- Availability Switch -->
+              <div class="mt-3">
+                <label class="switch">
+                  <input type="checkbox" class="availability-toggle" data-id="{{this.listingId}}" {{#if
+                    this.available}}checked{{/if}}>
+                  <span class="slider round"></span>
+                </label>
+                <span class="ml-2">Available</span>
+<a href="javascript:;" class="listing-detail btn btn-sm btn-primary" onclick="navigator.clipboard.writeText('https://nickhousebuyer.online/property/{{this.listingId}}'); Swal.fire({title: 'Link Copied', icon: 'success', confirmButtonText: 'Close'});">
+  <span class="ni ni-send"></span>
+</a>
               </div>
-              <div class="h6 mt-4">
-                <i class="ni business_briefcase-24 mr-2"></i>{{this.ReasonForSelling}}
-              </div>
-              <div class="h6 mt-4">
-                <i class="ni business_briefcase-24 mr-2"></i>{{this.TimeFrame}}
-              </div>
-              <a href="javascript:;" data-id="{{this.listingId}}" class="listing-detail btn btn-sm btn-primary">
-                Detail <i class="ni ni-collection"></i>
-              </a>
-              <div>
-                <i class="ni education_hat mr-2"></i>
-                <a href="https://ipinfo.io/{{this.ListerIP}}" target="_blank">Lister Ip Location</a>
-              </div>
+
             </div>
           </div>
         </div>
       </div>
       {{/each}}
     </div>
+
+    <style>
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 34px;
+        height: 20px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 20px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+      }
+
+      input:checked+.slider {
+        background-color: #4CAF50;
+      }
+
+      input:checked+.slider:before {
+        transform: translateX(14px);
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".availability-toggle").forEach((toggle) => {
+          toggle.addEventListener("change", function () {
+            const listingId = this.getAttribute("data-id");
+            const Available = this.checked ? 1 : 0;
+
+            fetch("/update-availability", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ listingId, Available }), // Send 1 for true and 0 for false
+            })
+              .then(response => {
+                console.log("Raw response:", response); // Debug the response
+                return response.text();  // Get raw text instead of JSON
+              })
+              .then(text => {
+                console.log("Response text:", text); // Log raw text
+                return JSON.parse(text); // Then parse JSON
+              })
+              .then(data => {
+                Swal.fire({
+                  title: data.success ? 'Success' : 'Error',
+                  text: data.success ? 'Availability updated successfully!' : 'Failed to update availability.',
+                  icon: data.success ? 'success' : 'error',
+                  confirmButtonText: 'Close',
+                })
+              })
+              .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Please check the console for more details.");
+              });
+          });
+        });
+      });
+    </script>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       const listings = {{{ json listings }}};

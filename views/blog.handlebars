@@ -37,9 +37,11 @@
 </head>
 
 <body>
-  {{> __navbar}}
+  {{> __newnav}}
 
-  <div class="page-header ima min-vh-80" style="background-image: url(/{{postt.Imag}})" alt="{{postt.Title}}">
+  <div     class=" page-header ima min-vh-180 hero-wrap hero-wrap-2 ftco-degree-bg js-fullheight"
+         data-stellar-background-ratio="0.5"
+   style="background-image: url(/{{postt.Imag}})" alt="{{postt.Title}}">
     <span class="mask bg-gradient-dark opacity-6"></span>
     <div class="container">
       <div class="row">
@@ -90,7 +92,7 @@
 
 
 
-        {{> __footer}}
+        {{> __newfooter}}
 
 
       </div>

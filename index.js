@@ -17,6 +17,7 @@ const kanbanRoutes = require('./routes/kanban');
 const sql = require('mssql');
 const dbConfig = require("./config/db");
 const Handlebars = require('handlebars');
+const session = require('express-session');
 
 const app = express();
 const port = process.env.PORT;
@@ -27,6 +28,14 @@ app.use(cookieParser());
 // Middleware to parse JSON and URL-encoded requests
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Configure session middleware
+app.use(session({
+  secret: process.env.SESEC ,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true } // Set to true if using HTTPS
+}));
 
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -53,7 +62,8 @@ app.use('/api', listing);
 app.use('/api', contactusRoute);
 app.use('/api', blogsRoutes);
 app.use('/api', contacts);
-
+const listingsRouter = require('./routes/listing');
+app.use('/', listingsRouter);
 
 // Register a custom helper to format the date
 Handlebars.registerHelper('formatDate', function (date) {
@@ -79,8 +89,7 @@ const fetchBlogPost = async (postId) => {
     throw err;
   } finally {
     sql.close();
-}
-};
+}};
 async function fetchBlogPosts() {
   try {
     let pool = await sql.connect(dbConfig);
@@ -92,8 +101,21 @@ async function fetchBlogPosts() {
     throw new Error('Error fetching blog posts');
   } finally {
     sql.close();
-}
-}
+}};
+ 
+const fetchlistPost = async (listingId) => {
+  try {
+    let pool = await sql.connect(dbConfig);
+    let result = await pool.request()
+      .input('listingId', sql.Int, listingId)
+      .query('SELECT * FROM dbo.listings_tbl WHERE listingId = @listingId');
+    return result.recordset[0];
+  } catch (err) {
+    console.error('Database query error:', err);
+    throw err;
+  } finally {
+    sql.close();
+}};
 
 // Terms of Service/Privacy Policy 
 app.get('/privacy-policy', (req, res) => {
@@ -130,7 +152,36 @@ app.get('/', async (req, res) => {
 }
 });
 app.get('/faq', (req, res) => {
-  res.render('faq', { title: `Frequently Asked Questions ` });
+  res.render('faq', { title: `Frequently Asked Questions` });
+});
+app.get('/properties', async (req, res) => {
+  try {
+    let pool = await sql.connect(dbConfig);
+    let result = await pool.request()
+      .query('SELECT * FROM dbo.listings_tbl WHERE Available = 1');
+    const listers = result.recordset;
+    res.render('properties', { title: `Available properties`, property: listers });
+  } catch (err) {
+    console.error('Error fetching lister:', err);
+    res.status(500).send('Error fetching lister');
+  } finally {
+    sql.close();
+  }
+});
+app.get('/property/:id', async (req, res) => {
+  const listingId = req.params.id;
+  try {
+      const list = await fetchlistPost(listingId);
+      if (!list) {
+          return res.status(404).send('List post not found');
+      }
+      res.render('property', { title: `property For Sale `, listPost:list });
+      // res.render('blog', { layout: false , title: post.Title, postt: post });
+    } catch (err) {
+      res.status(500).send('Error retrieving list post');
+  } finally {
+    sql.close();
+}
 });
 app.get('/Blogs', async (req, res) => {
   try {

@@ -26109,7 +26109,7 @@ hr.horizontal.gray-light {
 }
 
 .nav.nav-pills .nav-link {
-  z-index: 3;
+  z-index: -43;
   color: #262626;
   border-radius: 0.5rem;
   background-color: inherit;
@@ -26146,7 +26146,7 @@ hr.horizontal.gray-light {
   color: #fff;
 }
 
-.nav.nav-pills.nav-pills-primary .moving-tab .nav-link.active {
+.nav.nav-pills.nav-pills-primary .moving-tabb .nav-link.active {
   background: #49a3f1;
   color: #49a3f1;
 }
@@ -26197,11 +26197,11 @@ hr.horizontal.gray-light {
   z-index: 3;
 }
 
-.moving-tab {
+.moving-tabbb .tab-pan {
   z-index: 1 !important;
 }
 
-.moving-tab .nav-link {
+.moving-tabb .nav-link {
   color: #fff;
   transition: 0.2s ease;
   border-radius: 0.5rem;

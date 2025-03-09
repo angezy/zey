@@ -23663,7 +23663,7 @@ hr.horizontal.gray-light {
 }
 
 .nav.nav-pills .nav-link {
-  z-index: 3;
+  z-index: -43;
   color: #344767;
   border-radius: 0.5rem;
   background-color: inherit;

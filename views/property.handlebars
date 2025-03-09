@@ -1,0 +1,199 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<body>
+  {{> __newnav}}
+
+  <section class="hero-wrap hero-wrap-2 ftco-degree-bg js-fullheight"
+    style="background-image: url('/{{listPost.PhotoFile}}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="overlay-2"></div>
+    <div class="container">
+      <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+        <div class="col-md-9 ftco-animate pb-5 mb-5 text-center">
+          <h1 class="mb-3 bread">{{listPost.Title}}</h1>
+          <p class="breadcrumbs"><span class="mr-2"><a href="/Properties">Properties <i
+                  class="ion-ios-arrow-forward"></i></a></span> <span>{{listPost.PropertyAddress}}<i
+                class="ion-ios-arrow-forward"></i></span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ftco-section ftco-property-details">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="property-details">
+            <div class="img rounded" style="background-image: url(/{{listPost.PhotoFile}});"></div>
+            <div class="text">
+              <h2>{{listPost.Title}}</h2>
+              <span class="subheading">{{listPost.PropertyAddress}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 pills">
+          <div class="bd-example bd-example-tabs">
+            <div class="d-flex">
+              <ul class="nav nav-pills mb-2" id="pills-tab" role="tablist">
+
+                <li class="nav-item">
+                  <a class="nav-link active " id="pills-Features-tab" data-toggle="pill" href="#pills-Features"
+                    role="tab" aria-controls="pills-Features" aria-expanded="true">Features</a>
+                </li>
+
+
+
+                <li class="nav-item">
+                  <a class="nav-link" id="pills-manufacturer-tab" data-toggle="pill" href="#pills-manufacturer"
+                    role="tab" aria-controls="pills-manufacturer" aria-expanded="true">Description</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab"
+                    aria-controls="pills-review" aria-expanded="true">Comps</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="pills-photo-tab" data-toggle="pill" href="#pills-photo" role="tab"
+                    aria-controls="pills-photo" aria-expanded="true">Photos</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-Features" role="tabpanel"
+                aria-labelledby="pills-Features-tab">
+                <div class="row">
+                  <div class="col-md-4">
+                    <ul class="features">
+                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Lot Area: {{listPost.LotArea}} SQ
+                        FT</li>
+                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Bed Rooms: {{listPost.Bedrooms}}
+                      </li>
+                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Bath Rooms: {{listPost.Bathrooms}}
+                      </li>
+                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Garage: {{listPost.Garage}}</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4">
+                    <ul class="features">
+                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Floor Area: {{listPost.FloorArea}}
+                        SQ FT</li>
+                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Year Built: {{listPost.YearBuilt}}
+                      </li>
+                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Stories: {{listPost.Stories}}</li>
+                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Roofing: {{listPost.Roofing}}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="pills-manufacturer" role="tabpanel"
+                aria-labelledby="pills-manufacturer-tab">
+                <p>{{listPost.Description}}</p>
+              </div>
+
+              <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
+                <div class="row">
+                  <div class="col-md-7">
+                    <h3 class="head">Comps</h3>
+                    <div class="review d-flex">
+                      <div class="desc">
+                        <p>{{listPost.Comps1}}</p>
+                      </div>
+                    </div>
+
+                    <div class="review d-flex">
+                      <div class="desc">
+                        <p>{{listPost.Comps2}}</p>
+                      </div>
+                    </div>
+
+                    <div class="review d-flex">
+                      <div class="desc">
+                        <p>{{listPost.Comps3}}</p>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="col-md-5">
+                    <div class="rating-wrap">
+                      <h3 class="head">Give a Review</h3>
+                      <div class="wrap">
+                        <p class="star">
+                          <span>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            (98%)
+                          </span>
+                          <span>20 Reviews</span>
+                        </p>
+                        <p class="star">
+                          <span>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            (85%)
+                          </span>
+                          <span>10 Reviews</span>
+                        </p>
+                        <p class="star">
+                          <span>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            (70%)
+                          </span>
+                          <span>5 Reviews</span>
+                        </p>
+                        <p class="star">
+                          <span>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            (10%)
+                          </span>
+                          <span>0 Reviews</span>
+                        </p>
+                        <p class="star">
+                          <span>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            <i class="ion-ios-star"></i>
+                            (0%)
+                          </span>
+                          <span>0 Reviews</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="pills-photo" role="tabpanel" aria-labelledby="pills-photo-tab">
+                <a target="_blank" href="{{listPost.PhotoURL}}">Click to see Photos</a>
+                <iframe src={{listPost.PhotoURL}} frameborder="0" width="100%" height="500"></iframe>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>

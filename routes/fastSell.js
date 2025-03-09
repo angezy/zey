@@ -12,6 +12,7 @@ router.post('/fastSell', async (req, res) => {
     const formData = req.body;
     const referrer = req.get('Referer');
     const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    console.log("formData", formData);
 
     // Validate the incoming data
     const errors = validationResult(req);
@@ -84,7 +85,7 @@ router.post('/fastSell', async (req, res) => {
             .input('ContactEmail', sql.NVarChar, sanitizedFormData.ContactEmail)
             .input('AdditionalComments', sql.NVarChar, sanitizedFormData.AdditionalComments)
             .input('SubmitDate', sql.DateTime, sanitizedFormData.SubmitDate)
-            .input('SellerIP', sql.VarChar, sanitizedData.SellerIP)
+            .input('SellerIP', sql.VarChar, sanitizedFormData.SellerIP)
             .query(query);
 
         const { sendEmail, sendEmailWithTemplate } = require('../models/mailer');
