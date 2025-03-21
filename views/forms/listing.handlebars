@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit Your Property Listing</title>
   <meta name="description"
-    content="Register as a cash buyer with Nick's Real Estate Services to access high-quality investment properties. Tailor your buying criteria and discover profitable real estate deals today.">
+    content="listing your deal.">
   <meta name="keywords"
-    content="cash buyer form, real estate deals, investment properties, wholesale real estate, buy investment properties, real estate buyers, high ROI real estate">
+    content="listing your deal to close it fast">
   <meta name="author" content="Nick's Real Estate Services">
   <meta name="robots" content="index, follow">
   <!-- Font Awesome -->
@@ -33,28 +33,28 @@
               <h2 class="text-center">Submit Your Property Listing</h2>
               <form id="listingForm" class="text-center" action="/api/listing" method="POST" enctype="multipart/form-data">
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Title" name="Title" type="text" class="form-control" required />
-                  <label class="form-label" for="Title">Title</label>
+                  <input id="Title" name="Title" type="text" class="form-control"  />
+                  <label class="form-label" for="Title">Title*</label>
+                </div>
+                <div data-mdb-input-init class="form-outline ">
+                  <input id="FullName" name="FullName" type="text" class="form-control"  />
+                  <label class="form-label" for="FullName">Full Name*</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="FullName" name="FullName" type="text" class="form-control" required />
-                  <label class="form-label" for="FullName">Full Name</label>
+                  <input id="Email" name="Email" type="email" class="form-control"  />
+                  <label class="form-label" for="Email">Email*</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Email" name="Email" type="email" class="form-control" required />
-                  <label class="form-label" for="Email">Email</label>
+                  <input id="Phone" name="Phone" type="tel" class="form-control"  />
+                  <label class="form-label" for="Phone">Phone Number*</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Phone" name="Phone" type="tel" class="form-control" required />
-                  <label class="form-label" for="Phone">Phone Number</label>
+                  <input id="PropertyAddress" name="PropertyAddress" type="text" class="form-control"  />
+                  <label class="form-label" for="PropertyAddress">Property Address*</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="PropertyAddress" name="PropertyAddress" type="text" class="form-control" required />
-                  <label class="form-label" for="PropertyAddress">Property Address</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <select id="PropertyType" name="PropertyType" class="text-dark form-control" required>
-                    <option value="">Select Property Type</option>
+                  <select id="PropertyType" name="PropertyType" class="text-dark form-control" >
+                    <option value=""></option>
                     <option value="Single Family Home">Single Family Home</option>
                     <option value="Multi Family">Multi Family</option>
                     <option value="Condo">Condo</option>
@@ -64,32 +64,33 @@
                     <option value="Fourplex">Fourplex</option>
                     <option value="Other">Other</option>
                   </select>
-                  <label class="form-label" for="PropertyType">Property Type</label>
+                  <label class="form-label" for="PropertyType">Property Type*</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Bedrooms" name="Bedrooms" type="number" class="form-control" required />
-                  <label class="form-label" for="Bedrooms">Number of Bedrooms</label>
+                  <input id="Bedrooms" name="Bedrooms" type="number" class="form-control"  />
+                  <label class="form-label" for="Bedrooms">Number of Bedrooms*</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Bathrooms" name="Bathrooms" type="number" class="form-control" required />
-                  <label class="form-label" for="Bathrooms">Number of Bathrooms</label>
+                  <input id="Bathrooms" name="Bathrooms" type="number" class="form-control"  />
+                  <label class="form-label" for="Bathrooms">Number of Bathrooms*</label>
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="AskingPrice" name="AskingPrice" type="number" class="form-control" required />
-                  <label class="form-label" for="AskingPrice">Asking Price</label>
+                  <input id="AskingPrice" name="AskingPrice" type="number" class="form-control"  />
+                  <label class="form-label" for="AskingPrice">Asking Price*</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <textarea id="Description" name="Description" class="form-control" rows="3" required></textarea>
-                  <label class="form-label" for="Description">Description</label>
+                  <textarea id="Description" name="Description" class="form-control" rows="3" ></textarea>
+                  <label class="form-label" for="Description">Description*</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="ReasonForSelling" name="ReasonForSelling" type="text" class="form-control" required />
+                  <input id="ReasonForSelling" name="ReasonForSelling" type="text" class="form-control"  />
                   <label class="form-label" for="ReasonForSelling">Reason for Selling</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="PhotoFile" name="PhotoFile" type="file" class="form-control" accept="image/*" required />
-                  <label class="form-label" for="PhotoFile">Upload Photo</label>
+                  <input id="PhotoFile" name="PhotoFile" type="file" 
+                  class="form-control" accept="image/*"  />
+                  <label class="form-label" for="PhotoFile"></label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
                   <input id="PhotoURL" name="PhotoURL" type="url" class="form-control" />
@@ -100,15 +101,15 @@
                   <label class="form-label" for="LotArea">Lot Area (SQ FT)</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="FloorArea" name="FloorArea" type="number" class="form-control" required />
+                  <input id="FloorArea" name="FloorArea" type="number" class="form-control"  />
                   <label class="form-label" for="FloorArea">Floor Area (SQ FT)</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="YearBuilt" name="YearBuilt" type="number" class="form-control" required />
+                  <input id="YearBuilt" name="YearBuilt" type="number" class="form-control"  />
                   <label class="form-label" for="YearBuilt">Year Built</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Garage" name="Garage" type="number" class="form-control" required />
+                  <input id="Garage" name="Garage" type="number" class="form-control"  />
                   <label class="form-label" for="Garage">Garage</label>
                 </div>
                 <div data-mdb-input-init class="form-outline mb-4">
@@ -169,6 +170,12 @@
         console.error('Error submitting form:', error);
         window.location.href = `${window.location.href.split('?')[0]}?errors=${encodeURIComponent('Error submitting form')}`;
       }
+    });
+
+    // Ensure MDB components are initialized
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize all MDB input components
+      mdb.Input.init();
     });
   </script>
 </body>
