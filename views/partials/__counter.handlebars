@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-md-4 position-relative">
             <div class="p-3 text-center">
-              <h1 class="text-gradient text-dark"><span id="state1" countTo="490">0</span>+</h1>
+              <h1 class="text-gradient text-dark"><span id="state1" countTo="490">490</span>+</h1>
               <h5 class="mt-3">Verified Cash Buyers</h5>
               <p class="text-sm font-weight-normal">
                 Access a growing network of trusted cash buyers ready to close fast.</p>
@@ -14,7 +14,7 @@
           </div>
           <div class="col-md-4 position-relative">
             <div class="p-3 text-center">
-              <h1 class="text-gradient text-dark"> <span id="state2" countTo="130">0</span>+</h1>
+              <h1 class="text-gradient text-dark"> <span id="state2" countTo="130">130</span>+</h1>
               <h5 class="mt-3"> Houses Purchased</h5>
               <p class="text-sm font-weight-normal">
                Seamless transactions and satisfied homeowners—your trusted partner in selling fast.</p>
@@ -23,7 +23,7 @@
           </div>
           <div class="col-md-4">
             <div class="p-3 text-center">
-              <h1 class="text-gradient text-dark" id="state3" countTo="18">0</h1>
+              <h1 class="text-gradient text-dark" id="state3" countTo="18">21</h1>
               <h5 class="mt-3">Cities We Serve</h5>
               <p class="text-sm font-weight-normal">
                 Providing hassle-free home-selling solutions across multiple Florida cities.</p>
@@ -34,3 +34,32 @@
     </div>
   </div>
 </section>
+
+<script type="text/javascript">
+
+  if (document.getElementById('state1')) {
+    const countUp = new CountUp('state1', document.getElementById("state1").getAttribute("countTo"));
+    if (!countUp.error) {
+      countUp.start();
+    } else {
+      console.error(countUp.error);
+      console.log(countUp.error);
+    }
+  }
+  if (document.getElementById('state2')) {
+    const countUp1 = new CountUp('state2', document.getElementById("state2").getAttribute("countTo"));
+    if (!countUp1.error) {
+      countUp1.start();
+    } else {
+      console.error(countUp1.error);
+    }
+  }
+  if (document.getElementById('state3')) {
+    const countUp2 = new CountUp('state3', document.getElementById("state3").getAttribute("countTo"));
+    if (!countUp2.error) {
+      countUp2.start();
+    } else {
+      console.error(countUp2.error);
+    };
+  }
+</script>
