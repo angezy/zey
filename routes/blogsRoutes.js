@@ -57,8 +57,9 @@ router.post('/add-blog', upload.single('imag'), async (req, res) => {
 
 
 // Route to delete a blog post by ID
-router.delete('/delete-blog/:id', async (req, res) => {
+router.post('/delete-blog/:id', async (req, res) => {
     const { id } = req.params;
+    const referrer = req.get('Referer') || '/dashboard/blogEditor'; // fallback to your blog editor page
 
     try {
         const pool = await sql.connect(dbConfig);
@@ -69,7 +70,7 @@ router.delete('/delete-blog/:id', async (req, res) => {
             .query('SELECT Imag FROM dbo.BlogPosts_tbl WHERE postId = @PostId');
 
         if (post.recordset.length === 0) {
-            return res.status(404).json({ message: 'Blog post not found' });
+            return res.redirect(`${referrer}?error=Blog+post+not+found`);
         }
 
         const imagePath = post.recordset[0].Imag;
@@ -82,13 +83,13 @@ router.delete('/delete-blog/:id', async (req, res) => {
             .input('PostId', sql.Int, id)
             .query('DELETE FROM dbo.BlogPosts_tbl WHERE postId = @PostId');
 
-        res.status(200).json({ message: 'Blog post deleted successfully' });
+        return res.redirect(`${referrer}?success=Blog+post+deleted+successfully`);
     } catch (err) {
         console.error('Error deleting blog post:', err);
-        res.status(500).json({ message: 'Error deleting blog post' });
+        return res.redirect(`${referrer}?error=Error+deleting+blog+post`);
     } finally {
         sql.close();
-      }
+    }
 });
 
 // Route to edit a blog post

@@ -1,4 +1,4 @@
-  <script src="https://cdn.tiny.cloud/1/zgff7jvpasa13lgao61j8hsw32ovxkmhy9o9e7rbu4amlzhu/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/zgff7jvpasa13lgao61j8hsw32ovxkmhy9o9e7rbu4amlzhu/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery@2/dist/tinymce-jquery.min.js"></script>
 
 </head>
@@ -183,6 +183,9 @@
       button.addEventListener('click', () => {
         const id = button.dataset.id;
         document.getElementById('deleteBlogId').value = id;
+
+        // Set the form action to include the ID in the URL
+        document.getElementById('deleteBlogForm').setAttribute('action', `/api/delete-blog/${id}`);
 
         // Show the delete modal
         const deleteModal = new bootstrap.Modal(document.getElementById('deleteBlogModal'));
