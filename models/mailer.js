@@ -12,10 +12,7 @@ const sendPulseConfig = {
 let accessToken = null;
 let tokenExpiry = null;
 
-/**
- * Fetches a new access token from SendPulse.
- * @returns {Promise<string>} - The access token.
- */
+
 const getAccessToken = async () => {
   try {
     if (!accessToken || new Date() >= tokenExpiry) {

@@ -109,7 +109,11 @@ router.post('/fastSell', async (req, res) => {
             // Send thank-you email to client
             try {
                 const clientRecipient = { email: sanitizedFormData.ContactEmail, name: sanitizedFormData.FullName };
+<<<<<<< Updated upstream
                 const clientTemplateId = 'your-template-id'; // Replace with your actual template ID
+=======
+                const clientTemplateId = process.env.CLIENT_TEMPLATE_ID; // Use template ID from environment variables
+>>>>>>> Stashed changes
                 const clientTemplateData = {
                     name: sanitizedFormData.FullName,
                     message: 'Thank you for submitting the Fast Sell Form. Our team will get back to you shortly!',
@@ -136,11 +140,162 @@ router.post('/fastSell', async (req, res) => {
 });
 
 
+<<<<<<< Updated upstream
 router.get('/autocomplete', async (req, res) => {
     const query = req.query.query.trim(); // Trim whitespace
     const queryBytes = Buffer.byteLength(query, 'utf8'); // Measure byte size
 
     if (!query || queryBytes < 7 || queryBytes > 127) {
+=======
+
+
+router.post(
+  "/fastSell3",
+  [
+    body("FullName").notEmpty().trim().escape(),
+    body("PhoneNumber").notEmpty().trim().escape(),
+    body("PropertyAddress").notEmpty().trim().escape(),
+    body("SpecificRequests").optional().trim().escape(),
+  ],
+  async (req, res) => {
+    console.log("📥 Received POST /fastSell3 request");
+
+    const errors = validationResult(req);
+    console.log("🔍 Validation errors:", errors.array());
+
+    if (!errors.isEmpty()) {
+      console.warn("⚠️ Validation failed for request body:", req.body);
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const formData = req.body;
+    console.log("🧾 Raw formData:", formData);
+
+    const userIP =
+      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    const referrer = req.get("Referer") || "";
+    console.log("🌐 User IP:", userIP);
+    console.log("📄 Referrer:", referrer);
+
+    try {
+      // ✅ Sanitize inputs
+      const sanitized = {
+        FullName: validator.escape(formData.FullName || ""),
+        PhoneNumber: validator.escape(formData.PhoneNumber || ""),
+        PropertyAddress: validator.escape(formData.PropertyAddress || ""),
+        SpecificRequests: validator.escape(formData.SpecificRequests || ""),
+        SubmitDate: new Date().toISOString(),
+        SellerIP: userIP,
+      };
+      console.log("🧹 Sanitized data:", sanitized);
+
+      // ✅ Connect to MSSQL
+      console.log("🛠️ Connecting to MSSQL...");
+      const pool = await sql.connect(dbConfig);
+      console.log("✅ MSSQL connected successfully");
+
+      const query = `
+        INSERT INTO dbo.fastsel_tbl 
+          (FullName, PhoneNumber, PropertyAddress, SpecificRequests, SubmitDate, SellerIP)
+        VALUES 
+          (@FullName, @PhoneNumber, @PropertyAddress, @SpecificRequests, @SubmitDate, @SellerIP)
+      `;
+
+      console.log("💾 Running INSERT query...");
+      await pool
+        .request()
+        .input("FullName", sql.NVarChar, sanitized.FullName)
+        .input("PhoneNumber", sql.NVarChar, sanitized.PhoneNumber)
+        .input("PropertyAddress", sql.NVarChar, sanitized.PropertyAddress)
+        .input("SpecificRequests", sql.NVarChar, sanitized.SpecificRequests)
+        .input("SubmitDate", sql.DateTime, sanitized.SubmitDate)
+        .input("SellerIP", sql.VarChar, sanitized.SellerIP)
+        .query(query);
+      console.log("✅ Data inserted successfully into fastsel_tbl");
+
+      // ✅ Send Emails
+              const { sendEmail, sendEmailWithTemplate } = require('../models/mailer');
+
+      const sendEmails = async () => {
+        try {
+          console.log("📨 Sending admin email...");
+          const adminRecipients = [
+            { email: process.env.RECIPIENT_EMAIL1, name: "Admin" },
+          ];
+          const adminSubject = "New Fast Sell Form Submission";
+          const adminHtml = `
+            <h3>New Submission from ${sanitized.FullName}</h3>
+            <p><strong>Phone:</strong> ${sanitized.PhoneNumber}</p>
+            <p><strong>Address:</strong> ${sanitized.PropertyAddress}</p>
+            <p><strong>Specific Requests:</strong> ${sanitized.SpecificRequests}</p>
+            <p><strong>IP:</strong> ${sanitized.SellerIP}</p>
+          `;
+          await sendEmail(adminRecipients, adminSubject, "", adminHtml);
+          console.log("✅ Admin email sent.");
+        } catch (err) {
+          console.error("⚠️ Failed to send admin email:", err.message);
+        }
+
+        try {
+          console.log("📨 Sending client email...");
+          const clientRecipient = {
+            email: sanitized.ContactEmail || "noreply@example.com",
+            name: sanitized.FullName,
+          };
+          const clientTemplateId = process.env.CLIENT_TEMPLATE_ID;
+          const clientTemplateData = {
+            name: sanitized.FullName,
+            message:
+              "Thank you for submitting your property! We’ll contact you shortly.",
+          };
+
+          await sendEmailWithTemplate(
+            [clientRecipient],
+            clientTemplateId,
+            clientTemplateData
+          );
+          console.log("✅ Client email sent.");
+        } catch (err) {
+          console.error("⚠️ Failed to send client email:", err.message);
+        }
+      };
+
+      sendEmails();
+
+      // ✅ Respond to frontend
+      res.json({
+        success: true,
+        message: "Form submitted successfully! Our team will contact you soon.",
+      });
+      console.log("✅ Response sent to frontend");
+    } catch (err) {
+      console.error("❌ Database error:", err.message);
+      res.status(500).json({
+        success: false,
+        message: "Error saving data to database. Please try again later.",
+      });
+    } finally {
+      console.log("🔒 Closing MSSQL connection");
+      sql.close();
+    }
+  }
+);
+
+
+
+
+
+
+
+
+router.get('/autocomplete', async (req, res) => {
+    const MIN_QUERY_BYTES = 7;
+    const MAX_QUERY_BYTES = 127;
+    const query = req.query.query.trim(); // Trim whitespace
+    const queryBytes = Buffer.byteLength(query, 'utf8'); // Measure byte size
+        return res.status(400).json({ error: 'Query must be between 7 and 127 bytes.' });
+    if (!query || queryBytes < MIN_QUERY_BYTES || queryBytes > MAX_QUERY_BYTES) {
+>>>>>>> Stashed changes
         return res.status(400).json({ error: 'Query must be between 1 and 127 bytes.' });
     }
 
@@ -149,7 +304,11 @@ router.get('/autocomplete', async (req, res) => {
             params: {
                 'auth-id': process.env.authID, // Replace with your actual auth-id
                 'search': query, // Use the input query
+<<<<<<< Updated upstream
                 'auth-token': process.env.authToken // Replace with your actual auth-token
+=======
+                'auth-token': process.env.authToken
+>>>>>>> Stashed changes
             },
         });
 
