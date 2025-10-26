@@ -36,108 +36,132 @@
           <div class=" border  shadow-0 mb-3 glass-card" style="width: 100%;">
             <div class="card-body rounded-4 text-light px-5 pt-4 pb-2">
               <h2 class="text-center">Submit Your Property Listing</h2>
-              <form id="listingForm" class="text-center" action="/api/listing" method="POST" enctype="multipart/form-data">
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Title" name="Title" type="text" class="form-control"  />
-                  <label class="form-label" for="Title">Title*</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="FullName" name="FullName" type="text" class="form-control"  />
-                  <label class="form-label" for="FullName">Full Name*</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Email" name="Email" type="email" class="form-control"  />
-                  <label class="form-label" for="Email">Email*</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Phone" name="Phone" type="tel" class="form-control"  />
-                  <label class="form-label" for="Phone">Phone Number*</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="PropertyAddress" name="PropertyAddress" type="text" class="form-control"  />
-                  <label class="form-label" for="PropertyAddress">Property Address*</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <select id="PropertyType" name="PropertyType" class="text-dark form-control" >
-                    <option value=""></option>
-                    <option value="Single Family Home">Single Family Home</option>
-                    <option value="Multi Family">Multi Family</option>
-                    <option value="Condo">Condo</option>
-                    <option value="Townhouse">Townhouse</option>
-                    <option value="Apartment">Apartment</option>
-                    <option value="Triplex">Triplex</option>
-                    <option value="Fourplex">Fourplex</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <label class="form-label" for="PropertyType">Property Type*</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Bedrooms" name="Bedrooms" type="number" class="form-control"  />
-                  <label class="form-label" for="Bedrooms">Number of Bedrooms*</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Bathrooms" name="Bathrooms" type="number" class="form-control"  />
-                  <label class="form-label" for="Bathrooms">Number of Bathrooms*</label>
+              <form id="listingForm" class="needs-validation" action="/api/listing" method="POST" enctype="multipart/form-data" novalidate>
+                <div class="row gx-3">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="Title" class="form-label">Listing title *</label>
+                      <input id="Title" name="Title" type="text" class="form-control" placeholder="Cozy 3BR in Downtown" required />
+                      <div class="invalid-feedback">Please provide a title.</div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="FullName" class="form-label">Your full name *</label>
+                      <input id="FullName" name="FullName" type="text" class="form-control" placeholder="John Doe" required />
+                      <div class="invalid-feedback">Please enter your name.</div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="Email" class="form-label">Email *</label>
+                      <input id="Email" name="Email" type="email" class="form-control" placeholder="you@example.com" required />
+                      <div class="invalid-feedback">Enter a valid email address.</div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="Phone" class="form-label">Phone number *</label>
+                      <input id="Phone" name="Phone" type="tel" class="form-control" placeholder="(555) 555-5555" pattern="[0-9()+\-\s]{7,}" required />
+                      <div class="invalid-feedback">Enter a valid phone number.</div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="PropertyAddress" class="form-label">Property address *</label>
+                      <input id="PropertyAddress" name="PropertyAddress" type="text" class="form-control" placeholder="123 Main St, City, State" required />
+                      <div class="form-text">Include apartment/unit if applicable. Example: "123 Main St, Apt 4B"</div>
+                      <div class="invalid-feedback">Please enter the property address.</div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="PropertyType" class="form-label">Property type</label>
+                      <select id="PropertyType" name="PropertyType" class="form-select">
+                        <option value="">Choose type</option>
+                        <option value="Single Family Home">Single Family Home</option>
+                        <option value="Multi Family">Multi Family</option>
+                        <option value="Condo">Condo</option>
+                        <option value="Townhouse">Townhouse</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-sm-6 mb-3">
+                        <label for="Bedrooms" class="form-label">Bedrooms</label>
+                        <input id="Bedrooms" name="Bedrooms" type="number" class="form-control" min="0" />
+                      </div>
+                      <div class="col-sm-6 mb-3">
+                        <label for="Bathrooms" class="form-label">Bathrooms</label>
+                        <input id="Bathrooms" name="Bathrooms" type="number" class="form-control" min="0" />
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="AskingPrice" class="form-label">Asking price (USD)</label>
+                      <input id="AskingPrice" name="AskingPrice" type="number" class="form-control" min="0" step="0.01" />
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="Description" class="form-label">Description</label>
+                      <textarea id="Description" name="Description" class="form-control" rows="4" placeholder="Add details buyers should know"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="ReasonForSelling" class="form-label">Reason for selling</label>
+                      <input id="ReasonForSelling" name="ReasonForSelling" type="text" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Photo (upload or external URL)</label>
+                      <input id="PhotoFile" name="PhotoFile" type="file" class="form-control mb-2" accept="image/*" />
+                      <input id="PhotoURL" name="PhotoURL" type="url" class="form-control" placeholder="https://drive.google.com/.... (optional)" />
+                      <div class="form-text">If you paste a Google Drive sharing URL, make sure it's the file's shareable link. Uploaded file will be used if provided.</div>
+                      <div id="preview" class="mt-2"></div>
+                    </div>
+                  </div>
                 </div>
 
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="AskingPrice" name="AskingPrice" type="number" class="form-control"  />
-                  <label class="form-label" for="AskingPrice">Asking Price*</label>
+                <hr />
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label for="LotArea" class="form-label">Lot area (sq ft)</label>
+                    <input id="LotArea" name="LotArea" type="number" class="form-control" min="0" />
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="FloorArea" class="form-label">Floor area (sq ft)</label>
+                    <input id="FloorArea" name="FloorArea" type="number" class="form-control" min="0" />
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="YearBuilt" class="form-label">Year built</label>
+                    <input id="YearBuilt" name="YearBuilt" type="number" class="form-control" min="1800" max="2100" />
+                  </div>
                 </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <textarea id="Description" name="Description" class="form-control" rows="3" ></textarea>
-                  <label class="form-label" for="Description">Description*</label>
+
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label for="Garage" class="form-label">Garage</label>
+                    <input id="Garage" name="Garage" type="number" class="form-control" min="0" />
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="Stories" class="form-label">Stories</label>
+                    <input id="Stories" name="Stories" type="number" class="form-control" min="0" />
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="Roofing" class="form-label">Roofing</label>
+                    <input id="Roofing" name="Roofing" type="text" class="form-control" />
+                  </div>
                 </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="ReasonForSelling" name="ReasonForSelling" type="text" class="form-control"  />
-                  <label class="form-label" for="ReasonForSelling">Reason for Selling</label>
+
+                <div class="mb-3">
+                  <label for="Comps1" class="form-label">Comps (optional)</label>
+                  <input id="Comps1" name="Comps1" type="text" class="form-control mb-2" placeholder="Comps 1" />
+                  <input id="Comps2" name="Comps2" type="text" class="form-control mb-2" placeholder="Comps 2" />
+                  <input id="Comps3" name="Comps3" type="text" class="form-control" placeholder="Comps 3" />
                 </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="PhotoFile" name="PhotoFile" type="file" 
-                  class="form-control" accept="image/*"  />
-                  <label class="form-label" for="PhotoFile"></label>
+
+                <div class="d-grid mt-3">
+                  <button id="submitBtn" type="submit" class="btn btn-primary btn-lg">Submit listing</button>
                 </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="PhotoURL" name="PhotoURL" type="url" class="form-control" />
-                  <label class="form-label" for="PhotoURL">Photo URL</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="LotArea" name="LotArea" type="number" class="form-control"  />
-                  <label class="form-label" for="LotArea">Lot Area (SQ FT)</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="FloorArea" name="FloorArea" type="number" class="form-control"  />
-                  <label class="form-label" for="FloorArea">Floor Area (SQ FT)</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="YearBuilt" name="YearBuilt" type="number" class="form-control"  />
-                  <label class="form-label" for="YearBuilt">Year Built</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Garage" name="Garage" type="number" class="form-control"  />
-                  <label class="form-label" for="Garage">Garage</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Stories" name="Stories" type="number" class="form-control"  />
-                  <label class="form-label" for="Stories">Stories</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Roofing" name="Roofing" type="text" class="form-control"  />
-                  <label class="form-label" for="Roofing">Roofing</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Comps1" name="Comps1" type="text" class="form-control" />
-                  <label class="form-label" for="Comps1">Comps1</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Comps2" name="Comps2" type="text" class="form-control" />
-                  <label class="form-label" for="Comps2">Comps2</label>
-                </div>
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input id="Comps3" name="Comps3" type="text" class="form-control" />
-                  <label class="form-label" for="Comps3">Comps3</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit Listing</button>
               </form>
             </div>
           </div>
@@ -160,27 +184,91 @@
   <script src="/assets/js/listing.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById('listingForm').addEventListener('submit', async function (event) {
-      event.preventDefault();
-      const formData = new FormData(this);
-
-      try {
-        const response = await fetch('/api/listing', {
-          method: 'POST',
-          body: formData
+    (function(){
+      // Preview selected image
+      const photoFile = document.getElementById('PhotoFile');
+      const preview = document.getElementById('preview');
+      if(photoFile && preview){
+        photoFile.addEventListener('change', function(){
+          preview.innerHTML = '';
+          const f = this.files && this.files[0];
+          if(f){
+            const img = document.createElement('img');
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '200px';
+            img.className = 'rounded border';
+            img.src = URL.createObjectURL(f);
+            preview.appendChild(img);
+          }
         });
-
-        const result = await response.json();
-        if (result.success) {
-          window.location.href = `${window.location.href.split('?')[0]}?success=${encodeURIComponent(result.message)}`;
-        } else {
-          window.location.href = `${window.location.href.split('?')[0]}?errors=${encodeURIComponent(result.message)}`;
-        }
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        window.location.href = `${window.location.href.split('?')[0]}?errors=${encodeURIComponent('Error submitting form')}`;
       }
-    });
+
+      // Bootstrap-style validation + submit handling that supports JSON or server redirects
+      const form = document.getElementById('listingForm');
+      const submitBtn = document.getElementById('submitBtn');
+      if(!form) return;
+
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+
+        // Basic browser validation
+        if (!form.checkValidity()){
+          form.classList.add('was-validated');
+          return;
+        }
+
+        // Require either uploaded photo or PhotoURL
+        const photoUrlVal = (document.getElementById('PhotoURL')||{}).value || '';
+        const hasFile = (document.getElementById('PhotoFile')||{}).files && document.getElementById('PhotoFile').files.length>0;
+        if(!hasFile && !photoUrlVal){
+          Swal.fire({ icon: 'warning', title: 'Photo required', text: 'Please upload a photo or provide an external Photo URL.' });
+          return;
+        }
+
+        // Disable button and show spinner
+        submitBtn.disabled = true;
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+
+        try{
+          const fd = new FormData(form);
+          const resp = await fetch(form.action || '/api/listing', { method: 'POST', body: fd, redirect: 'follow' });
+
+          const ct = resp.headers.get('content-type') || '';
+          if(ct.includes('application/json')){
+            const json = await resp.json();
+            if(json && json.success){
+              await Swal.fire({ icon: 'success', title: 'Listing submitted', text: json.message || 'We received your listing.' });
+              // clear form
+              form.reset();
+              preview.innerHTML = '';
+            } else {
+              const msg = (json && json.message) || (json && json.error) || 'Submission failed';
+              await Swal.fire({ icon: 'error', title: 'Error', text: msg });
+            }
+          } else if (resp.redirected) {
+            // server-side redirect (legacy) — follow it
+            window.location = resp.url;
+          } else {
+            // Fallback: try to parse text and show a success toast
+            const text = await resp.text();
+            // crude check for success query in returned HTML
+            if(text && text.includes('success')){
+              await Swal.fire({ icon: 'success', title: 'Submitted', text: 'Listing submitted. You may be redirected.' });
+            } else {
+              await Swal.fire({ icon: 'error', title: 'Submission error', text: 'Unexpected server response.' });
+            }
+          }
+
+        }catch(err){
+          console.error('Submit error', err);
+          Swal.fire({ icon: 'error', title: 'Network error', text: 'Unable to submit listing. Try again later.' });
+        }finally{
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+      });
+    })();
   </script>
 </body>
 

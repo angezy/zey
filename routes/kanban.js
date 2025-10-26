@@ -13,8 +13,9 @@ router.post(
       // Existing validations
       body('facebookName').isString().withMessage('FacebookName must be a string').trim().escape(),
       body('chatResult').isString().withMessage('ChatResult must be a string').trim().escape(),
-      body('email').optional().isEmail().withMessage('Invalid email address').normalizeEmail(),
-      body('phoneNumber').optional().isString().withMessage('PhoneNumber must be a string').trim().escape(),
+  body('chatDate').optional({ checkFalsy: true }).isISO8601().withMessage('Invalid date format for chatDate'),
+  body('email').optional({ checkFalsy: true }).isEmail().withMessage('Invalid email address').normalizeEmail(),
+  body('phoneNumber').optional({ checkFalsy: true }).isString().withMessage('PhoneNumber must be a string').trim().escape(),
       body('role').isString().withMessage('Role is required').trim().escape(),
       body('specificRole').optional().isString().trim().escape(),
     ],
@@ -38,13 +39,15 @@ router.post(
           PhoneNumber: validator.escape(formData.phoneNumber || ""),
           Role: validator.escape(formData.role || ""),
           SpecificRole: formData.role === "Other" ? validator.escape(formData.specificRole || "") : "",
+          // ChatDate: allow optional date from form (YYYY-MM-DD) otherwise use now
+          ChatDate: formData.chatDate ? new Date(formData.chatDate) : new Date(),
         };
   
-        // Connect to MSSQL and insert data
-        const pool = await sql.connect(dbConfig);
+  // Connect to MSSQL
+  const pool = await sql.connect(dbConfig);
         const query = `
-          INSERT INTO dbo.kanban_tbl (FacebookName, ChatResult, Email, PhoneNumber, Role, SpecificRole)
-          VALUES (@FacebookName, @ChatResult, @Email, @PhoneNumber, @Role, @SpecificRole)
+          INSERT INTO dbo.kanban_tbl (FacebookName, ChatResult, Email, PhoneNumber, Role, SpecificRole, ChatDate)
+          VALUES (@FacebookName, @ChatResult, @Email, @PhoneNumber, @Role, @SpecificRole, @ChatDate)
         `;
         await pool.request()
           .input('FacebookName', sql.NVarChar, sanitizedData.FacebookName)
@@ -53,6 +56,7 @@ router.post(
           .input('PhoneNumber', sql.NVarChar, sanitizedData.PhoneNumber)
           .input('Role', sql.NVarChar, sanitizedData.Role)
           .input('SpecificRole', sql.NVarChar, sanitizedData.SpecificRole)
+          .input('ChatDate', sql.DateTime, sanitizedData.ChatDate)
           .query(query);
   
         const successMessage = encodeURIComponent("Form submitted successfully!");
@@ -62,7 +66,7 @@ router.post(
         const errorMessage = encodeURIComponent("Error saving data to database");
         res.redirect(`${referrer}?error=${errorMessage}`);
       } finally {
-        sql.close();
+        try { sql.close(); } catch (e) { console.error('Error closing connection:', e.message); }
       }
     }
   );

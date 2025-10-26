@@ -1,5 +1,6 @@
 const express = require('express');
 const sql = require('mssql');
+// use central DB connection
 const { body, validationResult } = require('express-validator');
 const validator = require('validator');
 const multer = require('multer');
@@ -25,19 +26,35 @@ router.post('/listing', upload, async (req, res) => {
     const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const imageFile = req.file ? `public/images/uploads/${req.file.filename}` : null;
 
-    if (!imageFile) {
-        const errorMessage = encodeURIComponent("Photo file is required.");
-        return res.redirect(`${referrer}?errors=${errorMessage}`);
-    }
+    // helper: detect whether client prefers JSON (AJAX/fetch) or HTML (legacy form)
+    const accept = (req.headers.accept || '');
+    const wantsHtml = accept.includes('text/html') && !accept.includes('application/json');
+    const wantsJson = !wantsHtml;
 
-    // Validate the incoming data
+    // helper: convert Google Drive share links to embeddable/viewable URL
+    const convertDriveUrl = (raw) => {
+        if (!raw) return '';
+        const t = validator.trim(raw);
+        // Try to extract file ID from common Drive URL patterns
+        const m1 = t.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+        if (m1 && m1[1]) return `https://drive.google.com/uc?export=view&id=${m1[1]}`;
+        const m2 = t.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+        if (m2 && m2[1]) return `https://drive.google.com/uc?export=view&id=${m2[1]}`;
+        // If it's a drive viewer url that ends with /view or /preview, leave as is but replace /view with /preview if needed
+        if (/drive\.google\.com/.test(t)) return t.replace(/\/view(.*)$/, '/preview');
+        return t;
+    };
+
+    // Validate the incoming data (if validators applied elsewhere)
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
         console.log('Validation errors:', errors.array());
         const errorMessages = errors.array().map(error => error.msg);
         if (req.session) {
             req.session.formData = req.body;
+        }
+        if (wantsJson) {
+            return res.status(400).json({ success: false, errors: errorMessages });
         }
         const query = new URLSearchParams({
             errors: JSON.stringify(errorMessages),
@@ -49,12 +66,16 @@ router.post('/listing', upload, async (req, res) => {
 
     try {
         // Sanitize input data
+        // Sanitize inputs - keep address and photo URL trimmed (not HTML-escaped) to preserve formatting/links
+        const rawPhotoUrl = formData.PhotoURL || '';
+        const normalizedPhotoUrl = rawPhotoUrl ? convertDriveUrl(rawPhotoUrl) : '';
+
         const sanitizedFormData = {
             Title: validator.escape(formData.Title || ''),
             FullName: validator.escape(formData.FullName || ''),
             Email: validator.normalizeEmail(formData.Email || ''),
             Phone: validator.escape(formData.Phone || ''),
-            PropertyAddress: validator.escape(formData.PropertyAddress || ''),
+            PropertyAddress: validator.trim(formData.PropertyAddress || ''),
             PropertyType: validator.escape(formData.PropertyType || ''),
             Bedrooms: validator.isInt(formData.Bedrooms || '') ? formData.Bedrooms : null,
             Bathrooms: validator.isInt(formData.Bathrooms || '') ? formData.Bathrooms : null,
@@ -65,7 +86,7 @@ router.post('/listing', upload, async (req, res) => {
             SubmitDate: new Date().toISOString(),
             ListerIP: userIP,
             PhotoFile: imageFile,
-            PhotoURL: validator.escape(formData.PhotoURL || ''),
+            PhotoURL: normalizedPhotoUrl || '',
             LotArea: validator.isInt(formData.LotArea || '') ? formData.LotArea : null,
             FloorArea: validator.isInt(formData.FloorArea || '') ? formData.FloorArea : null,
             YearBuilt: validator.isInt(formData.YearBuilt || '') ? formData.YearBuilt : null,
@@ -78,8 +99,16 @@ router.post('/listing', upload, async (req, res) => {
             Comps3: validator.escape(formData.Comps3 || '')
         };
 
-        // Connect to MSSQL
-        const pool = await sql.connect(dbConfig);
+        // Require either uploaded image or a valid external URL
+        if (!sanitizedFormData.PhotoFile && !(sanitizedFormData.PhotoURL && validator.isURL(sanitizedFormData.PhotoURL, { require_protocol: true }))) {
+            const msg = 'Please upload a photo or provide a valid Photo URL (example: https://drive.google.com/...).';
+            if (wantsJson) return res.status(400).json({ success: false, error: msg });
+            const errorMessage = encodeURIComponent(msg);
+            return res.redirect(`${referrer}?errors=${errorMessage}`);
+        }
+
+    // Connect to MSSQL
+    const pool = await sql.connect(dbConfig);
 
         // Insert Data into Listings_tbl
         const query = `
@@ -145,14 +174,22 @@ router.post('/listing', upload, async (req, res) => {
 
         await sendEmails();
 
-        const successMessage = encodeURIComponent("Listing submitted successfully!");
-        res.redirect(`${referrer}?success=${successMessage}`);
+        // Respond with JSON for AJAX clients, otherwise redirect as legacy behavior
+        if (wantsJson) {
+            return res.json({ success: true, message: 'Listing submitted successfully!' });
+        } else {
+            const successMessage = encodeURIComponent("Listing submitted successfully!");
+            return res.redirect(`${referrer}?success=${successMessage}`);
+        }
     } catch (err) {
         console.error(err);
+        if (wantsJson) {
+            return res.status(500).json({ success: false, error: 'Error saving data to database' });
+        }
         const errorMessage = encodeURIComponent("Error saving data to database");
-        res.redirect(`${referrer}?errors=${errorMessage}`);
+        return res.redirect(`${referrer}?errors=${errorMessage}`);
     } finally {
-        sql.close();
+        try { sql.close(); } catch(e) { console.error('Error closing connection:', e.message); }
     }
 });
 
@@ -176,7 +213,7 @@ router.post("/update-availability", async (req, res) => {
         console.error("Database update error:", error);
         res.status(500).json({ success: false, message: "Database error" });
     } finally {
-        sql.close();
+        try { sql.close(); } catch(e) { console.error('Error closing connection:', e.message); }
     }
 });
 

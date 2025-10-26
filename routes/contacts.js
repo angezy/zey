@@ -41,8 +41,8 @@ router.post(
           ContactIP: userIP 
         };
   
-        // Connect to MSSQL and insert data
-        const pool = await sql.connect(dbConfig);
+  // Connect to MSSQL
+  const pool = await sql.connect(dbConfig);
         const query = `
           INSERT INTO dbo.contacts_tbl (FacebookName, ChatResult, Email, PhoneNumber, Role, SpecificRole, ContactIP)
           VALUES (@FacebookName, @ChatResult, @Email, @PhoneNumber, @Role, @SpecificRole, @ContactIP)
@@ -64,7 +64,7 @@ router.post(
         const errorMessage = encodeURIComponent("Error saving data to database");
         res.redirect(`${referrer}?error=${errorMessage}`);
       } finally {
-        sql.close();
+        try { sql.close(); } catch(e) { console.error('Error closing connection:', e.message); }
       }
     }
 );

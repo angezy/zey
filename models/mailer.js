@@ -70,30 +70,38 @@ const sendEmail = async (recipients, subject, text, html, fromName = sendPulseCo
 /**
  * Sends an email using a SendPulse template.
  */
-const sendEmailWithTemplate = async (recipients, templateName, variables) => {
+const sendEmailWithTemplate = async (recipients, templateName, variables = {}) => {
   try {
     const token = await getAccessToken();
     const toRecipients = recipients.map(({ email, name }) => ({ email, name }));
 
-    const response = await axios.post(
-      `${sendPulseConfig.apiUrl}/smtp/emails`,
-      {
-        email: {
-          from: {
-            name: sendPulseConfig.senderName,
-            email: sendPulseConfig.senderEmail,
-          },
-          to: toRecipients,
-          template: {
-            name: templateName,
-            variables,
-          },
+    // Some SendPulse setups require a subject even when using a template.
+    // Use variables.subject if provided, otherwise fall back to a sensible default.
+    const subject = variables.subject || `Message from ${sendPulseConfig.senderName}`;
+
+    const templateField = {};
+    // If templateName looks like a numeric id, send as template.id (required by some SendPulse setups)
+    if (/^\d+$/.test(String(templateName))) {
+      templateField.id = Number(templateName);
+    } else {
+      templateField.name = templateName;
+    }
+
+    const payload = {
+      email: {
+        from: {
+          name: sendPulseConfig.senderName,
+          email: sendPulseConfig.senderEmail,
         },
+        to: toRecipients,
+        subject,
+        template: Object.assign({}, templateField, { variables }),
       },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    };
+
+    const response = await axios.post(`${sendPulseConfig.apiUrl}/smtp/emails`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     console.log('Template email sent successfully:', response.data);
   } catch (error) {

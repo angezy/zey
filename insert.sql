@@ -1,13 +1,3 @@
-<<<<<<< Updated upstream
-ALTER TABLE dbo.listings_tbl
-ADD 
-    LotArea INT,
-    FloorArea INT,
-    YearBuilt INT,
-    Garage INT,
-    Stories INT,
-    Roofing NVARCHAR(255);
-=======
 CREATE TABLE dbo.fastsel_tbl (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     FullName NVARCHAR(150) NOT NULL,
@@ -17,4 +7,3 @@ CREATE TABLE dbo.fastsel_tbl (
     SubmitDate DATETIME NOT NULL DEFAULT(GETDATE()),
     SellerIP VARCHAR(100) NULL
 );
->>>>>>> Stashed changes

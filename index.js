@@ -22,6 +22,69 @@ const session = require('express-session');
 const app = express();
 const port = process.env.PORT;
 
+// Expose site and geo metadata to views (can be overridden via environment variables)
+app.locals.geo = {
+  lat: process.env.GEO_LAT || '27.994402',
+  lon: process.env.GEO_LON || '-81.760254',
+  region: process.env.GEO_REGION || 'US-FL',
+  placename: process.env.GEO_PLACENAME || 'Florida',
+  country: process.env.GEO_COUNTRY || 'US',
+};
+app.locals.site = {
+  url: process.env.SITE_URL || (`http://localhost:${process.env.PORT || 3000}`),
+  name: process.env.SITE_NAME || 'Nick House Buyer'
+};
+
+// Expose contact phone (use env or fallback to provided US number)
+app.locals.site.phone = process.env.SITE_PHONE || '+13235531922';
+
+// Sitemap route (dynamic) to produce sitemap.xml based on known public routes
+app.get('/sitemap.xml', async (req, res) => {
+  const base = app.locals.site.url.replace(/\/$/, '');
+  res.header('Content-Type', 'application/xml');
+  try {
+    let pool = await sql.connect(dbConfig);
+
+    // Static pages
+    const staticPages = ['/', '/properties', '/blogs', '/contactus', '/privacy-policy', '/terms-of-service'];
+    const now = new Date().toISOString();
+
+    // Fetch available properties
+    const propsResult = await pool.request().query('SELECT listingId, CreatedAt, UpdatedAt, Available FROM dbo.listings_tbl WHERE Available = 1');
+    const properties = (propsResult.recordset || []).map(r => ({
+      loc: `${base}/property/${r.listingId}`,
+      lastmod: (r.UpdatedAt || r.CreatedAt) ? new Date(r.UpdatedAt || r.CreatedAt).toISOString() : now
+    }));
+
+    // Fetch blog posts
+    const postsResult = await pool.request().query('SELECT postId, CreatedAt, UpdatedAt FROM dbo.BlogPosts_tbl');
+    const posts = (postsResult.recordset || []).map(p => ({
+      loc: `${base}/blog/${p.postId}`,
+      lastmod: (p.UpdatedAt || p.CreatedAt) ? new Date(p.UpdatedAt || p.CreatedAt).toISOString() : now
+    }));
+
+    const allUrls = [];
+
+    // add static
+    staticPages.forEach(p => allUrls.push({ loc: `${base}${p}`, lastmod: now }));
+    // add properties and posts
+    properties.forEach(u => allUrls.push(u));
+    posts.forEach(u => allUrls.push(u));
+
+    const urlsXml = allUrls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`).join('\n');
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlsXml}\n</urlset>`;
+    res.send(xml);
+  } catch (err) {
+    console.error('Error building sitemap:', err);
+    // Fallback to minimal sitemap
+    const now = new Date().toISOString();
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${base}/</loc>\n    <lastmod>${now}</lastmod>\n  </url>\n</urlset>`;
+    res.status(500).send(xml);
+  } finally {
+    try { sql.close(); } catch (e) {}
+  }
+});
+
 // Middleware to handle cookies
 app.use(cookieParser());
 
@@ -34,7 +97,8 @@ app.use(session({
   secret: process.env.SESEC ,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true } // Set to true if using HTTPS
+  // Use secure cookies only in production (HTTPS). For local dev over HTTP set to false.
+  cookie: { secure: (process.env.NODE_ENV === 'production') }
 }));
 
 // Middleware to parse JSON requests
@@ -127,7 +191,20 @@ app.get('/terms-of-service', (req, res) => {
 
 // Forms routes
 app.get('/forms/Cash-Buyer', (req, res) => {
-  res.render('cashbuyers', { title: ` Nick's Cash Buyers Form `, layout: false });
+  // If there is form data saved in session (from a previous failed submit), pass it to the template
+  const formValues = (req.session && req.session.cbForm && req.session.cbForm.values) ? req.session.cbForm.values : {};
+  const formErrors = (req.session && req.session.cbForm && req.session.cbForm.errors) ? req.session.cbForm.errors : null;
+
+  // Clear the saved form from session so it does not persist indefinitely
+  try {
+    // NOTE: do NOT clear session.cbForm here; the client-side `/api/cbForm/restore` endpoint
+    // will read and clear the session (one-time). Removing deletion here ensures the restore
+    // endpoint can return the saved payload (including price min/max and uploaded file path).
+  } catch (e) {
+    console.error('Could not access session cbForm:', e.message);
+  }
+
+  res.render('cashbuyers', { title: ` Nick's Cash Buyers Form `, layout: false, formValues, formErrors, success: req.query.success, message: req.query.message });
 });
 app.get('/forms/fastSell', (req, res) => {
   res.render('fastSell', { title: ` Fast Sell House `, layout: false });
@@ -155,14 +232,75 @@ app.get('/faq', (req, res) => {
   res.render('faq', { title: `Frequently Asked Questions` });
 });
 app.get('/properties', async (req, res) => {
+  // Support filter form query params: q, beds, baths, priceRange, proOnly
+  const { q, beds, baths, priceRange, proOnly } = req.query || {};
   try {
     let pool = await sql.connect(dbConfig);
-    let result = await pool.request()
-      .query('SELECT * FROM dbo.listings_tbl WHERE Available = 1');
-    const listers = result.recordset;
-    res.render('properties', { title: `Available properties`, property: listers });
+
+    // Build parameterized WHERE clauses
+    const where = ['Available = 1'];
+    const request = pool.request();
+
+    if (q && String(q).trim() !== '') {
+      where.push('(Title LIKE @q OR PropertyAddress LIKE @q OR Description LIKE @q)');
+      request.input('q', sql.NVarChar, `%${String(q).trim()}%`);
+    }
+
+    if (beds && String(beds).trim() !== '') {
+      // Expect formats like '1+' or numeric string. Treat 'N+' as >= N
+      const m = String(beds).match(/(\d+)/);
+      if (m) {
+        const n = parseInt(m[1], 10);
+        where.push('Bedrooms >= @beds');
+        request.input('beds', sql.Int, n);
+      }
+    }
+
+    if (baths && String(baths).trim() !== '') {
+      const m = String(baths).match(/(\d+)/);
+      if (m) {
+        const n = parseInt(m[1], 10);
+        where.push('Bathrooms >= @baths');
+        request.input('baths', sql.Int, n);
+      }
+    }
+
+    if (priceRange && String(priceRange).trim() !== '') {
+      // Support a few ranges used in the UI
+      const pr = String(priceRange).replace(/\s/g, '');
+      if (/^\$?0-\$?100k$/i.test(pr) || /^\$?0-\$?100000$/i.test(pr)) {
+        where.push('AskingPrice BETWEEN @pmin AND @pmax');
+        request.input('pmin', sql.Money, 0);
+        request.input('pmax', sql.Money, 100000);
+      } else if (/100k-300k/i.test(pr) || /100000-300000/.test(pr)) {
+        where.push('AskingPrice BETWEEN @pmin AND @pmax');
+        request.input('pmin', sql.Money, 100000);
+        request.input('pmax', sql.Money, 300000);
+      } else if (/300k\+/i.test(pr) || /300000\+/.test(pr)) {
+        where.push('AskingPrice >= @pmin');
+        request.input('pmin', sql.Money, 300000);
+      }
+    }
+
+    if (proOnly && (proOnly === 'on' || proOnly === 'true' || proOnly === '1')) {
+      // assume a boolean/bit column named IsPro exists
+      where.push('IsPro = 1');
+    }
+
+    const whereSql = where.length ? ('WHERE ' + where.join(' AND ')) : '';
+    const finalQuery = `SELECT * FROM dbo.listings_tbl ${whereSql} ORDER BY CreatedAt DESC`;
+
+    const result = await request.query(finalQuery);
+    const listers = result.recordset || [];
+
+    // Preserve query values for the view so form inputs keep their values
+    res.render('properties', {
+      title: `Available properties`,
+      property: listers,
+      filters: { q: q || '', beds: beds || '', baths: baths || '', priceRange: priceRange || '', proOnly: proOnly || '' }
+    });
   } catch (err) {
-    console.error('Error fetching lister:', err);
+    console.error('Error fetching lister with filters:', err);
     res.status(500).send('Error fetching lister');
   } finally {
     sql.close();
@@ -211,6 +349,10 @@ app.get('/signin', (req, res) => {
   const error = req.query.error;
   res.render('signin', { title: 'Sign In', layout: false, error });
 });
+// Render signup page
+app.get('/signup', (req, res) => {
+  res.render('signup', { title: 'Sign Up', layout: false });
+});
 app.get('/Contactus', (req, res) => {
   res.render('Contactus', { title: `Contact Us` });
 });
@@ -234,8 +376,7 @@ app.get('/dashboard/billing', authMiddleware, (req, res) => {
 app.get('/dashboard/cashBuyers', authMiddleware, async (req, res) => {
   try {
     let pool = await sql.connect(dbConfig);
-    let result = await pool.request()
-      .query('SELECT * FROM dbo.cashbuyers_tbl');
+    let result = await pool.request().query('SELECT * FROM dbo.cashbuyers_tbl');
     const cashbuyers = result.recordset;
     res.render('cashCard', { title: 'CashBuyers', layout: "__dashboard", cashbuyer: cashbuyers });
   } catch (err) {
@@ -248,8 +389,7 @@ app.get('/dashboard/cashBuyers', authMiddleware, async (req, res) => {
 app.get('/dashboard/fastSeller', authMiddleware, async (req, res) => {
   try {
     let pool = await sql.connect(dbConfig);
-    let result = await pool.request()
-      .query('SELECT * FROM dbo.fastsell_tbl');
+    let result = await pool.request().query('SELECT * FROM dbo.fastsell_tbl');
     const fastSellers = result.recordset;
     res.render('fastSeller', { title: 'fastSeller', layout: "__dashboard", fastSeller: fastSellers });
   } catch (err) {
@@ -290,15 +430,28 @@ app.get('/dashboard/blogEditor', authMiddleware, async (req, res) => {
 app.get('/dashboard/kanban', authMiddleware, async (req, res) => {
   try {
     let pool = await sql.connect(dbConfig);
-    const result = await pool.request().query('SELECT * FROM dbo.kanban_tbl');
-    const kanban = result.recordset;
-    res.render('kanban', { title: 'Kanban Feature', layout: '__dashboard' , kanban: kanban});
-} catch (err) {
+
+    // Accept ?date=YYYY-MM-DD to filter entries by day. Default to today when not provided.
+    const queryDate = req.query.date ? new Date(req.query.date) : new Date();
+    // Normalize to YYYY-MM-DD string for SQL DATE parameter and for the date input value
+    const yyyy = queryDate.getFullYear();
+    const mm = String(queryDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(queryDate.getDate()).padStart(2, '0');
+    const dateOnly = `${yyyy}-${mm}-${dd}`;
+
+    // Use a parameterized query to fetch rows for this day (based on ChatDate column)
+    const result = await pool.request()
+      .input('date', sql.Date, dateOnly)
+      .query('SELECT * FROM dbo.kanban_tbl WHERE CONVERT(date, ChatDate) = @date ORDER BY ChatDate DESC');
+
+    const kanban = result.recordset || [];
+    res.render('kanban', { title: 'Kanban Feature', layout: '__dashboard', kanban: kanban, selectedDate: dateOnly, entriesCount: kanban.length });
+  } catch (err) {
     console.error('Error fetching entries:', err);
     res.status(500).send('Error fetching entries');
-} finally {
-  sql.close();
-}
+  } finally {
+    sql.close();
+  }
 });
 app.get('/dashboard/contacts', authMiddleware, async (req, res)=>{
   try {

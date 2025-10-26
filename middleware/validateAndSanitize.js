@@ -1,4 +1,5 @@
 const { body, validationResult } = require('express-validator');
+const path = require('path');
 
 const validateAndSanitize = [
   // Basic Information
@@ -57,13 +58,59 @@ const validateAndSanitize = [
     if (!errors.isEmpty()) {
       console.log('Validation errors:', errors.array());
       const errorMessages = errors.array().map(error => error.msg);
-      const formData = req.body;
-      const query = new URLSearchParams({
-        errors: JSON.stringify(errorMessages),
-        ...formData,
-      }).toString();
+      const formData = req.body || {};
 
-      return res.redirect(`${referrer}?${query}`);
+      // If multer has placed a file on req.file, include its stored relative path so the client
+      // can show a preview or link. Note: browsers do not allow setting input[type=file] values,
+      // so we include a separate indicator for previously uploaded files.
+      try {
+        if (req.file && req.file.filename) {
+          formData.ProofOfFundsFile = path.join('public', 'uploaded', req.file.filename).replace(/\\/g, '/');
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      // Normalize / derive price range pieces so client can restore sliders reliably
+      try {
+        // If a PriceRanges string exists, try to parse numbers
+        if (formData.PriceRanges && typeof formData.PriceRanges === 'string') {
+          const nums = (formData.PriceRanges.match(/\d+/g) || []).map(n => parseInt(n, 10));
+          if (nums.length >= 2) {
+            formData.PriceRangesMin = nums[0];
+            formData.PriceRangesMax = nums[1];
+            formData.PriceRanges = `${formData.PriceRangesMin} - ${formData.PriceRangesMax}`;
+          }
+        } else {
+          // If client separately posted min/max fields, normalize them into PriceRanges
+          const minRaw = formData.PriceRangesMin || formData.priceMin || '';
+          const maxRaw = formData.PriceRangesMax || formData.priceMax || '';
+          const min = parseInt(String(minRaw).replace(/[^0-9]/g, ''), 10);
+          const max = parseInt(String(maxRaw).replace(/[^0-9]/g, ''), 10);
+          if (!isNaN(min) && !isNaN(max)) {
+            formData.PriceRangesMin = min;
+            formData.PriceRangesMax = max;
+            formData.PriceRanges = `${min} - ${max}`;
+          }
+        }
+      } catch (e) {
+        // don't block saving session if parsing fails
+      }
+
+      // Save form values and detailed errors in session so client can restore them via the restore endpoint
+      try {
+        if (req.session) {
+          req.session.cbForm = { values: formData, errors: errors.array() };
+          // (debug logs removed)
+        }
+      } catch (e) {
+        console.error('Could not save validation data to session:', e.message);
+      }
+
+      // Redirect back to referrer with minimal errors indicator (client will fetch full details from session)
+      const ref = referrer || '/forms/Cash-Buyer';
+      const encoded = encodeURIComponent(JSON.stringify(errorMessages));
+      return res.redirect(`${ref}?errors=${encoded}`);
     }
 
     next();

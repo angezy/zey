@@ -16,9 +16,21 @@ router.post('/fastSell', async (req, res) => {
 
     // Validate the incoming data
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+  if (!errors.isEmpty()) {
+    // Save submitted values and errors in session so the form can be repopulated
+  try {
+      if (req.session) {
+        req.session.fastSellForm = { values: formData, errors: errors.array() };
+      }
+    } catch (e) {
+      console.error('Could not save fastSell form data to session:', e.message);
     }
+
+    const ref = referrer || '/forms/fastSell';
+    const errMsgs = errors.array().map(e => e.msg || e.param || 'Validation error');
+    const encoded = encodeURIComponent(JSON.stringify(errMsgs));
+    return res.redirect(`${ref}?errors=${encoded}`);
+  }
     try {
         // Sanitize input data
         const sanitizedFormData = {
@@ -47,8 +59,8 @@ router.post('/fastSell', async (req, res) => {
 
         };
 
-        // Connect to MSSQL
-        const pool = await sql.connect(dbConfig);
+  // Connect to MSSQL
+  const pool = await sql.connect(dbConfig);
 
         // Insert Data into FastSellForm_tbl
         const query = `
@@ -109,11 +121,7 @@ router.post('/fastSell', async (req, res) => {
             // Send thank-you email to client
             try {
                 const clientRecipient = { email: sanitizedFormData.ContactEmail, name: sanitizedFormData.FullName };
-<<<<<<< Updated upstream
                 const clientTemplateId = 'your-template-id'; // Replace with your actual template ID
-=======
-                const clientTemplateId = process.env.CLIENT_TEMPLATE_ID; // Use template ID from environment variables
->>>>>>> Stashed changes
                 const clientTemplateData = {
                     name: sanitizedFormData.FullName,
                     message: 'Thank you for submitting the Fast Sell Form. Our team will get back to you shortly!',
@@ -130,23 +138,15 @@ router.post('/fastSell', async (req, res) => {
 
         const successMessage = encodeURIComponent("Form submitted successfully!");
         res.redirect(`${referrer}?success=${successMessage}`);
-    } catch (err) {
+  } catch (err) {
         console.error(err);
         const errorMessage = encodeURIComponent("Error saving data to database");
         res.redirect(`${referrer}?error=${errorMessage}`);
-    } finally {
-        sql.close();
-    }
+  } finally {
+    try { sql.close(); } catch(e) { console.error('Error closing connection:', e.message); }
+  }
 });
 
-
-<<<<<<< Updated upstream
-router.get('/autocomplete', async (req, res) => {
-    const query = req.query.query.trim(); // Trim whitespace
-    const queryBytes = Buffer.byteLength(query, 'utf8'); // Measure byte size
-
-    if (!query || queryBytes < 7 || queryBytes > 127) {
-=======
 
 
 router.post(
@@ -190,9 +190,9 @@ router.post(
       console.log("🧹 Sanitized data:", sanitized);
 
       // ✅ Connect to MSSQL
-      console.log("🛠️ Connecting to MSSQL...");
-      const pool = await sql.connect(dbConfig);
-      console.log("✅ MSSQL connected successfully");
+  console.log("🛠️ Connecting to MSSQL...");
+  pool = await sql.connect(dbConfig);
+  console.log("✅ MSSQL connected successfully");
 
       const query = `
         INSERT INTO dbo.fastsel_tbl 
@@ -275,8 +275,8 @@ router.post(
         message: "Error saving data to database. Please try again later.",
       });
     } finally {
-      console.log("🔒 Closing MSSQL connection");
-      sql.close();
+  console.log("🔒 Closing MSSQL connection");
+  try { if (pool) await pool.close(); } catch (e) { console.error('Error closing pool:', e.message); }
     }
   }
 );
@@ -289,42 +289,57 @@ router.post(
 
 
 router.get('/autocomplete', async (req, res) => {
-    const MIN_QUERY_BYTES = 7;
-    const MAX_QUERY_BYTES = 127;
-    const query = req.query.query.trim(); // Trim whitespace
-    const queryBytes = Buffer.byteLength(query, 'utf8'); // Measure byte size
-        return res.status(400).json({ error: 'Query must be between 7 and 127 bytes.' });
-    if (!query || queryBytes < MIN_QUERY_BYTES || queryBytes > MAX_QUERY_BYTES) {
->>>>>>> Stashed changes
-        return res.status(400).json({ error: 'Query must be between 1 and 127 bytes.' });
-    }
+  const MIN_QUERY_BYTES = 3;
+  const MAX_QUERY_BYTES = 127;
+  const query = (req.query.query || '').trim(); // Trim whitespace and guard undefined
+  const queryBytes = Buffer.byteLength(query, 'utf8'); // Measure byte size
 
-    try {
-        const response = await axios.get('https://us-autocomplete-pro.api.smarty.com/lookup', {
-            params: {
-                'auth-id': process.env.authID, // Replace with your actual auth-id
-                'search': query, // Use the input query
-<<<<<<< Updated upstream
-                'auth-token': process.env.authToken // Replace with your actual auth-token
-=======
-                'auth-token': process.env.authToken
->>>>>>> Stashed changes
-            },
-        });
+  if (!query || queryBytes < MIN_QUERY_BYTES || queryBytes > MAX_QUERY_BYTES) {
+    return res.status(400).json({ error: `Query must be between ${MIN_QUERY_BYTES} and ${MAX_QUERY_BYTES} bytes.` });
+  }
 
-        // Check if 'suggestions' exists and is an array
-        if (Array.isArray(response.data.suggestions)) {
-            const suggestions = response.data.suggestions.map(item => ({
-                display_name: `${item.street_line}, ${item.city}, ${item.state} ${item.zipcode}`
-            }));
-            return res.json(suggestions);
-        } else {
-            // If 'suggestions' is not an array, return an error
-            return res.status(500).json({ error: 'Unexpected API response structure.' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch suggestions' });
+  try {
+    const response = await axios.get('https://us-autocomplete-pro.api.smarty.com/lookup', {
+      params: {
+        // support multiple env var names just in case
+        'auth-id': process.env.SMARTY_AUTH_ID || process.env.authID,
+        'search': query, // Use the input query
+        'auth-token': process.env.SMARTY_AUTH_TOKEN || process.env.authToken
+      },
+    });
+
+    // Prefer response.data.suggestions (Smarty API), but be defensive
+    const suggestionsSource = Array.isArray(response.data && response.data.suggestions)
+      ? response.data.suggestions
+      : Array.isArray(response.data)
+        ? response.data
+        : null;
+
+    if (Array.isArray(suggestionsSource)) {
+      const suggestions = suggestionsSource.map(item => ({
+        display_name: `${item.street_line || item.display_name || item.name || ''}, ${item.city || ''} ${item.state || ''} ${item.zipcode || ''}`.replace(/(^[\s,]+|[\s,]+$)/g, '')
+      }));
+      return res.json(suggestions);
+    } else {
+      console.error('Autocomplete: unexpected API response', response.data);
+      return res.status(500).json({ error: 'Unexpected API response structure.' });
     }
+  } catch (error) {
+    console.error('Autocomplete error:', error && error.message ? error.message : error);
+    return res.status(500).json({ error: 'Failed to fetch suggestions' });
+  }
+});
+// Endpoint to return saved fastSell form values/errors (if any) and clear them from session.
+router.get('/fastSell/restore', (req, res) => {
+  try {
+    const data = (req.session && req.session.fastSellForm) ? req.session.fastSellForm : { values: {}, errors: null };
+    const payload = { values: data.values || {}, errors: data.errors || null };
+    if (req.session && req.session.fastSellForm) delete req.session.fastSellForm;
+    return res.json(payload);
+  } catch (e) {
+    console.error('fastSell/restore error:', e.message);
+    return res.status(500).json({ values: {}, errors: null });
+  }
 });
 
 module.exports = router;

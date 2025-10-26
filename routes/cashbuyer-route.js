@@ -3,13 +3,53 @@ const sql = require('mssql');
 const { body, validationResult } = require('express-validator');
 const validator = require('validator');
 const validateAndSanitize = require('../middleware/validateAndSanitize');
+const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
+const multer = require('multer');
 const router = express.Router();
 require('dotenv').config();
 const dbConfig = require('../config/db');
 
+// Configure multer storage for uploaded files (store in public/uploaded with safe short names)
+const uploadDir = path.join(process.cwd(), 'public', 'uploaded');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        try { fs.mkdirSync(uploadDir, { recursive: true }); } catch (e) {}
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        try {
+            const ext = path.extname(file.originalname) || '';
+            const newName = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}${ext}`;
+            cb(null, newName);
+        } catch (e) {
+            cb(null, `${Date.now()}-${Math.random().toString(36).slice(2,8)}${path.extname(file.originalname)}`);
+        }
+    }
+});
+const upload = multer({ storage });
+
+// One-time restore endpoint used by client to fetch saved form values and errors from session
+router.get('/cbForm/restore', (req, res) => {
+    try {
+        if (req.session && req.session.cbForm) {
+            const payload = req.session.cbForm;
+            // clear it so it's one-time
+            try { delete req.session.cbForm; } catch (e) {}
+            return res.json(payload);
+        }
+        return res.json({});
+    } catch (e) {
+        console.error('Error in cbForm/restore:', e.message);
+        return res.status(500).json({});
+    }
+});
+
 
 // POST route for form submission
-router.post('/cbForm', validateAndSanitize, async (req, res) => {
+// multer's upload middleware must run before validation so req.file is available
+router.post('/cbForm', upload.single('ProofOfFundsFile'), validateAndSanitize, async (req, res) => {
     const formData = req.body;
     const referrer = req.get('Referer');
     const userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -17,11 +57,26 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
     // Validate the incoming data
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        // Save submitted values and errors in session so the form can be repopulated
+        try {
+            if (req.session) {
+                req.session.cbForm = { values: formData, errors: errors.array() };
+            }
+        } catch (e) {
+            console.error('Could not save form data to session:', e.message);
+        }
+
+        // Redirect back to the referring form page and include a lightweight errors query for client-side alerts
+        const ref = referrer || '/forms/Cash-Buyer';
+        const errMsgs = errors.array().map(e => e.msg || (e.param + ': ' + e.msg));
+        const encoded = encodeURIComponent(JSON.stringify(errMsgs));
+        return res.redirect(`${ref}?errors=${encoded}`);
     }
 
     try {
         // Sanitize input data to prevent SQL injection or other malicious inputs
+        // Prefer file info from multer (req.file) when available. multer is configured
+        // below to store uploaded files into public/uploaded with a short safe filename.
         const sanitizedFormData = {
             FullName: validator.escape(formData.FullName || ''),
             CompanyName: validator.escape(formData.CompanyName || ''),
@@ -37,7 +92,23 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
             SourceFinancing: Array.isArray(formData.SourceFinancing) ? formData.SourceFinancing.join(', ') : validator.escape(formData.SourceFinancing || ''),
             FundingInPlace: validator.escape(formData.FundingInPlace || ''),
             ProofOfFunds: validator.escape(formData.ProofOfFunds || ''),
-            ProofOfFundsFile: 'public/uploaded/' + validator.escape(formData.ProofOfFundsFile || ''),
+            ProofOfFundsFile: (() => {
+                try {
+                    if (req.file && req.file.filename) {
+                        return path.join('public', 'uploaded', req.file.filename).replace(/\\/g, '/');
+                    }
+
+                    // Fallback: sanitize any provided path/string from the form
+                    const raw = (formData.ProofOfFundsFile || '').toString();
+                    if (!raw) return '';
+                    const incomingBase = path.basename(raw);
+                    const safe = validator.escape(incomingBase).slice(0, 200);
+                    return safe ? path.join('public', 'uploaded', safe).replace(/\\/g, '/') : '';
+                } catch (e) {
+                    console.error('ProofOfFundsFile processing error:', e.message);
+                    return '';
+                }
+            })(),
             TripleDeals: validator.escape(formData.TripleDeals || ''),
             Quickly: validator.escape(formData.Quickly || ''),
             PriceRanges: validator.escape(formData.PriceRanges || ''),
@@ -57,8 +128,8 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
             CashBuyerIP: userIP
         };
 
-        // Connect to MSSQL
-        const pool = await sql.connect(dbConfig);
+    // Connect to MSSQL
+    const pool = await sql.connect(dbConfig);
 
         // Insert Data into CashBuyerForm_tbl
         const query = `
@@ -136,13 +207,16 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
             // Send thank-you email to client
             try {
                 const clientRecipient = { email: sanitizedFormData.Email, name: sanitizedFormData.FullName };
-                const clientTemplateId = 'your-template-id'; // Replace with your actual template ID
-                const clientTemplateData = {
-                    name: sanitizedFormData.FullName,
-                    message: 'Thank you for submitting the Cash Buyer Form. Our team will get back to you shortly!',
+                const clientTemplateId = '52393';
+
+                // Provide template variables and a subject so SendPulse accepts the request.
+                const templateVars = {
+                    fullName: sanitizedFormData.FullName,
+                    // You can add more template variables here if your template expects them
+                    subject: `Thanks from ${process.env.SENDER_NAME || 'Our Team'}`
                 };
 
-                await sendEmailWithTemplate([clientRecipient], clientTemplateId, clientTemplateData);
+                await sendEmailWithTemplate([clientRecipient], clientTemplateId, templateVars);
                 console.log('Client email sent successfully.');
             } catch (error) {
                 console.error('Failed to send client email:', error.message);
@@ -152,14 +226,25 @@ router.post('/cbForm', validateAndSanitize, async (req, res) => {
 
         sendEmails();
 
-        const successMessage = encodeURIComponent("Form submitted successfully!");
-        res.redirect(`${referrer}?success=true&message=${successMessage}`);
+    // Clear any saved form values on successful submit
+    try { if (req.session) delete req.session.cbForm; } catch (e) { console.error('Could not clear session cbForm after success:', e.message); }
+    const successMessage = encodeURIComponent("Form submitted successfully!");
+    res.redirect(`${referrer}?success=true&message=${successMessage}`);
     } catch (err) {
         console.error(err);
-        const errorMessage = encodeURIComponent("Error saving data to database");
-        res.redirect(`${referrer}?errors=${errorMessage}`);
+        // Save form values so user doesn't lose input
+        try {
+            if (req.session) {
+                req.session.cbForm = { values: formData, errors: [{ msg: 'Error saving data to database' }] };
+            }
+        } catch (e) {
+            console.error('Could not save form data to session after DB error:', e.message);
+        }
+        const errorMessage = encodeURIComponent(JSON.stringify(["Error saving data to database"]));
+        const ref = referrer || '/forms/Cash-Buyer';
+        res.redirect(`${ref}?errors=${errorMessage}`);
     } finally {
-        sql.close();
+        try { sql.close(); } catch (e) { console.error('Error closing connection:', e.message); }
     }
 });
 

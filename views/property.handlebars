@@ -5,195 +5,166 @@
 <body>
   {{> __newnav}}
 
-  <section class="hero-wrap hero-wrap-2 ftco-degree-bg js-fullheight"
-    style="background-image: url('/{{listPost.PhotoFile}}');">
-    <div class="overlay"></div>
-    <div class="overlay-2"></div>
+  <section class="bg-light py-4">
     <div class="container">
-      <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
-        <div class="col-md-9 ftco-animate pb-5 mb-5 text-center">
-          <h1 class="mb-3 bread">{{listPost.Title}}</h1>
-          <p class="breadcrumbs"><span class="mr-2"><a href="/Properties">Properties <i
-                  class="ion-ios-arrow-forward"></i></a></span> <span>{{listPost.PropertyAddress}}<i
-                class="ion-ios-arrow-forward"></i></span></p>
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="mb-1">{{listPost.Title}}</h1>
+          <p class="text-muted mb-0"><i class="ion-ios-pin"></i> {{listPost.PropertyAddress}}</p>
+          <div class="mt-3 d-flex align-items-center">
+            {{#if listPost.IsPro}}
+              <span class="badge bg-warning text-dark me-2">PRO</span>
+            {{/if}}
+            <h3 class="mb-0 text-primary me-3">${{listPost.AskingPrice}}</h3>
+            <div class="text-muted small">Posted: {{formatDate listPost.CreatedAt}}</div>
+          </div>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <a href="/properties" class="btn btn-outline-secondary me-2">Back to listings</a>
+          <a href="#contact-card" class="btn btn-win">Contact Seller</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="ftco-section ftco-property-details">
+  <section class="ftco-section">
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-12">
-          <div class="property-details">
-            <div class="img rounded" style="background-image: url(/{{listPost.PhotoFile}});"></div>
-            <div class="text">
-              <h2>{{listPost.Title}}</h2>
-              <span class="subheading">{{listPost.PropertyAddress}}</span>
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Image / Gallery -->
+          <div id="propertyCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+            <div class="carousel-inner rounded shadow-sm" style="height:420px; overflow:hidden;">
+              <div class="carousel-item active" style="background-image:url('/{{listPost.PhotoFile}}'); background-size:cover; background-position:center; height:420px;"></div>
+              {{#if listPost.PhotoURL}}
+                <div class="carousel-item" style="background:#f5f5f5; display:flex; align-items:center; justify-content:center; height:420px;">
+                  <iframe src="{{listPost.PhotoURL}}" frameborder="0" width="100%" height="420" title="Photos"></iframe>
+                </div>
+              {{/if}}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+
+          <!-- Description -->
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Property description</h5>
+              <p class="card-text">{{#if listPost.Description}}{{listPost.Description}}{{else}}No description provided.{{/if}}</p>
             </div>
           </div>
+
+          <!-- Features and Comps -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title">Key features</h5>
+                  <ul class="list-unstyled mb-0">
+                    <li><i class="flaticon-bed text-primary me-2"></i><strong>Bedrooms:</strong> {{listPost.Bedrooms}}</li>
+                    <li><i class="flaticon-bathtub text-primary me-2"></i><strong>Bathrooms:</strong> {{listPost.Bathrooms}}</li>
+                    <li><i class="flaticon-floor-plan text-primary me-2"></i><strong>Area:</strong> {{listPost.SquareFootage}} sqft</li>
+                    <li><i class="ion-ios-pricetag text-primary me-2"></i><strong>Lot Area:</strong> {{listPost.LotArea}}</li>
+                    <li><i class="ion-ios-business text-primary me-2"></i><strong>Year Built:</strong> {{listPost.YearBuilt}}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title">Comparable sales (Comps)</h5>
+                  <p class="small mb-2">{{#if listPost.Comps1}}{{listPost.Comps1}}{{else}}No comps available.{{/if}}</p>
+                  <p class="small mb-2">{{listPost.Comps2}}</p>
+                  <p class="small mb-0">{{listPost.Comps3}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 pills">
-          <div class="bd-example bd-example-tabs">
-            <div class="d-flex">
-              <ul class="nav nav-pills mb-2" id="pills-tab" role="tablist">
 
-                <li class="nav-item">
-                  <a class="nav-link active " id="pills-Features-tab" data-toggle="pill" href="#pills-Features"
-                    role="tab" aria-controls="pills-Features" aria-expanded="true">Features</a>
-                </li>
+        <aside class="col-lg-4">
+          <div id="contact-card" class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Contact about this property</h5>
+              <p class="small text-muted">Listing ID: <strong>{{listPost.listingId}}</strong></p>
+              <form id="propertyContactForm">
+                <input type="hidden" name="listingId" id="pListingId" value="{{listPost.listingId}}">
+                <div class="mb-2">
+                  <label for="pName" class="form-label">Your name</label>
+                  <input id="pName" name="FullName" class="form-control" required>
+                </div>
+                <div class="mb-2">
+                  <label for="pEmail" class="form-label">Email</label>
+                  <input id="pEmail" name="Email" type="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label for="pMessage" class="form-label">Message</label>
+                  <textarea id="pMessage" name="message" class="form-control" rows="4">I'm interested in {{listPost.Title}} (ID: {{listPost.listingId}}). Please contact me.</textarea>
+                </div>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary">Send message</button>
+                </div>
+              </form>
+            </div>
+          </div>
 
-
-
-                <li class="nav-item">
-                  <a class="nav-link" id="pills-manufacturer-tab" data-toggle="pill" href="#pills-manufacturer"
-                    role="tab" aria-controls="pills-manufacturer" aria-expanded="true">Description</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab"
-                    aria-controls="pills-review" aria-expanded="true">Comps</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="pills-photo-tab" data-toggle="pill" href="#pills-photo" role="tab"
-                    aria-controls="pills-photo" aria-expanded="true">Photos</a>
-                </li>
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title">Details</h6>
+              <ul class="list-unstyled small mb-0">
+                <li><strong>Status:</strong> {{#if listPost.Available}}Available{{else}}Unavailable{{/if}}</li>
+                <li><strong>Garage:</strong> {{listPost.Garage}}</li>
+                <li><strong>Stories:</strong> {{listPost.Stories}}</li>
               </ul>
             </div>
-
-            <div class="tab-content" id="pills-tabContent">
-              <div class="tab-pane fade show active" id="pills-Features" role="tabpanel"
-                aria-labelledby="pills-Features-tab">
-                <div class="row">
-                  <div class="col-md-4">
-                    <ul class="features">
-                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Lot Area: {{listPost.LotArea}} SQ
-                        FT</li>
-                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Bed Rooms: {{listPost.Bedrooms}}
-                      </li>
-                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Bath Rooms: {{listPost.Bathrooms}}
-                      </li>
-                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Garage: {{listPost.Garage}}</li>
-                    </ul>
-                  </div>
-                  <div class="col-md-4">
-                    <ul class="features">
-                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Floor Area: {{listPost.FloorArea}}
-                        SQ FT</li>
-                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Year Built: {{listPost.YearBuilt}}
-                      </li>
-                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Stories: {{listPost.Stories}}</li>
-                      <li class="check"><span class="ion-ios-checkmark-circle"></span>Roofing: {{listPost.Roofing}}</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="tab-pane fade" id="pills-manufacturer" role="tabpanel"
-                aria-labelledby="pills-manufacturer-tab">
-                <p>{{listPost.Description}}</p>
-              </div>
-
-              <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
-                <div class="row">
-                  <div class="col-md-7">
-                    <h3 class="head">Comps</h3>
-                    <div class="review d-flex">
-                      <div class="desc">
-                        <p>{{listPost.Comps1}}</p>
-                      </div>
-                    </div>
-
-                    <div class="review d-flex">
-                      <div class="desc">
-                        <p>{{listPost.Comps2}}</p>
-                      </div>
-                    </div>
-
-                    <div class="review d-flex">
-                      <div class="desc">
-                        <p>{{listPost.Comps3}}</p>
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="col-md-5">
-                    <div class="rating-wrap">
-                      <h3 class="head">Give a Review</h3>
-                      <div class="wrap">
-                        <p class="star">
-                          <span>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            (98%)
-                          </span>
-                          <span>20 Reviews</span>
-                        </p>
-                        <p class="star">
-                          <span>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            (85%)
-                          </span>
-                          <span>10 Reviews</span>
-                        </p>
-                        <p class="star">
-                          <span>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            (70%)
-                          </span>
-                          <span>5 Reviews</span>
-                        </p>
-                        <p class="star">
-                          <span>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            (10%)
-                          </span>
-                          <span>0 Reviews</span>
-                        </p>
-                        <p class="star">
-                          <span>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            <i class="ion-ios-star"></i>
-                            (0%)
-                          </span>
-                          <span>0 Reviews</span>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="tab-pane fade" id="pills-photo" role="tabpanel" aria-labelledby="pills-photo-tab">
-                <a target="_blank" href="{{listPost.PhotoURL}}">Click to see Photos</a>
-                <iframe src="{{listPost.PhotoURL}}" frameborder="0" width="100%" height="500"></iframe>
-              </div>
-
-
-
-            </div>
           </div>
-        </div>
-      </div>
 
+        </aside>
+      </div>
     </div>
   </section>
+
+  <style>
+    /* Small page-specific polish */
+    .btn-win{ background: linear-gradient(180deg,#0078d4,#0066b3); color:#fff; }
+    .card-title{ font-weight:600; }
+    .text-primary{ color:#0d6efd !important; }
+    .carousel-item{ background-size:cover; background-position:center; }
+  </style>
+
+  <script>
+    (function(){
+      if(!window.jQuery) return;
+      jQuery(function($){
+        $('#propertyContactForm').on('submit', function(e){
+          e.preventDefault();
+          var $btn = $(this).find('button[type=submit]');
+          $btn.prop('disabled', true).text('Sending...');
+          var payload = {
+            FullName: $('#pName').val(),
+            Email: $('#pEmail').val(),
+            subject: 'Inquiry about listing ' + $('#pListingId').val(),
+            message: $('#pMessage').val()
+          };
+          $.ajax({ url: '/api/contactus', method: 'POST', data: payload, dataType: 'json' })
+            .done(function(){
+              alert('Message sent — thank you.');
+              $('#propertyContactForm')[0].reset();
+            })
+            .fail(function(xhr){
+              var msg = 'Failed to send message.';
+              try{ var j = xhr.responseJSON; if(j && j.error) msg = j.error; }catch(e){}
+              alert(msg);
+            })
+            .always(function(){ $btn.prop('disabled', false).text('Send message'); });
+        });
+      });
+    })();
+  </script>
